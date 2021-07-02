@@ -42,7 +42,8 @@ class DatabaseHelper(context: Context)
                 DECK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 DECK_NAME + " TEXT NOT NULL UNIQUE, " +
                 DECK_CREATED + " TEXT NOT NULL, " +
-                DECK_LASTUSE + " TEXT" +
+                DECK_LASTUSE + " TEXT," +
+                " UNIQUE (" + DECK_NAME + " COLLATE NOCASE)" +
                 ")")
 
         db?.execSQL("CREATE TABLE " + CARD_TABLE + " (" +

@@ -179,7 +179,7 @@ class DatabaseHelper(context: Context)
     fun getDeckByName(name: String): Deck? {
         val db: SQLiteDatabase = this.readableDatabase
         db.use {
-            val selectQuery = "SELECT * FROM $DECK_TABLE WHERE $DECK_NAME = $name"
+            val selectQuery = "SELECT * FROM $DECK_TABLE WHERE $DECK_NAME = '$name'"
             val cursor = db.rawQuery(selectQuery, null)
             if (cursor != null) {
  //               cursor.moveToFirst()

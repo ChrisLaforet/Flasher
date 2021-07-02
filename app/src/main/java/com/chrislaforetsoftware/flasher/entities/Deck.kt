@@ -1,6 +1,8 @@
 package com.chrislaforetsoftware.flasher.entities
 
-class Deck {
+import java.io.Serializable
+
+class Deck: Serializable {
     var id: Int = 0
     var name: String = ""
     var created: String = ""

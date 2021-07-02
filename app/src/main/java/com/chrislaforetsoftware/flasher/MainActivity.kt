@@ -28,7 +28,9 @@ class MainActivity : AppCompatActivity() {
 		val listView: ListView? = this.findViewById(R.id.deck_list)
 		listView?.setOnItemClickListener { parent, view, position, id ->
 			val element = parent.getItemAtPosition(position) 	// The item that was clicked
+			val deck = getDatabase().getDeckByName(element.toString())
 			val intent = Intent(this, CardsActivity::class.java)
+			intent.putExtra("deck", deck)
 			startActivity(intent)
 		}
 		showDecks()

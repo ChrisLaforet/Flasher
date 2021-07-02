@@ -1,6 +1,8 @@
 package com.chrislaforetsoftware.flasher.entities
 
-class Card {
+import java.io.Serializable
+
+class Card: Serializable {
     var id: Int = 0
     var deckId: Int = 0
     var face: String = ""

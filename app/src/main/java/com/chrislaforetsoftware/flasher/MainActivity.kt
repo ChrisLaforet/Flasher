@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
 		}
 	}
 
-	fun createNewDeck(view: View) {
+	fun onClickCreateActionButton(view: View) {
 		val namePromptBox = AlertDialog.Builder(view.context)
 		namePromptBox.setTitle("Name for Card Deck")
 		val editText = EditText(namePromptBox.context)
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
 		namePromptBox.setPositiveButton("OK") { dialog, which ->
 			run {
 				val title = editText.getText().toString()
-				if (!title.isEmpty()) {
+				if (title.isNotEmpty()) {
 					val db = DatabaseHelper(this)
 					val deck = Deck()
 					deck.name = title

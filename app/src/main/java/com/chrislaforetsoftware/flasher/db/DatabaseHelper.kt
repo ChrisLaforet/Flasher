@@ -143,7 +143,6 @@ class DatabaseHelper(context: Context)
             val selectQuery = "SELECT * FROM $DECK_TABLE"
             val cursor = db.rawQuery(selectQuery, null)
             if (cursor != null) {
-//                cursor.moveToFirst()
                 while (cursor.moveToNext()) {
                     decks.add(extractDeckFromCursor(cursor))
                 }
@@ -154,7 +153,7 @@ class DatabaseHelper(context: Context)
 
     private fun extractDeckFromCursor(cursor: Cursor): Deck {
         val deck = Deck()
-        deck.id = cursor.getColumnIndex(DECK_ID).toInt()
+        deck.id = cursor.getColumnIndex(DECK_ID)
         deck.name = cursor.getString(cursor.getColumnIndex(DECK_NAME))
         deck.created = cursor.getString(cursor.getColumnIndex(DECK_CREATED))
         deck.lastUse = cursor.getString(cursor.getColumnIndex(DECK_LASTUSE))
@@ -166,11 +165,8 @@ class DatabaseHelper(context: Context)
         db.use {
             val selectQuery = "SELECT * FROM $DECK_TABLE WHERE $DECK_ID = $id"
             val cursor = db.rawQuery(selectQuery, null)
-            if (cursor != null) {
- //               cursor.moveToFirst()
-                if (cursor.moveToNext()) {
-                    return extractDeckFromCursor(cursor)
-                }
+            if (cursor != null && cursor.moveToNext()) {
+                return extractDeckFromCursor(cursor)
             }
         }
         return null
@@ -181,11 +177,8 @@ class DatabaseHelper(context: Context)
         db.use {
             val selectQuery = "SELECT * FROM $DECK_TABLE WHERE $DECK_NAME = '$name'"
             val cursor = db.rawQuery(selectQuery, null)
-            if (cursor != null) {
- //               cursor.moveToFirst()
-                if (cursor.moveToNext()) {
-                    return extractDeckFromCursor(cursor)
-                }
+            if (cursor != null && cursor.moveToNext()) {
+                return extractDeckFromCursor(cursor)
             }
         }
         return null
@@ -193,7 +186,7 @@ class DatabaseHelper(context: Context)
 
     private fun extractCardFromCursor(cursor: Cursor): Card {
         val card = Card()
-        card.id = cursor.getColumnIndex(CARD_ID).toInt()
+        card.id = cursor.getColumnIndex(CARD_ID)
         card.deckId = cursor.getInt(cursor.getColumnIndex(CARD_DECK_ID))
         card.face = cursor.getString(cursor.getColumnIndex(CARD_FACE))
         card.reverse = cursor.getString(cursor.getColumnIndex(CARD_REVERSE))
@@ -212,8 +205,7 @@ class DatabaseHelper(context: Context)
             val selectQuery = "SELECT * FROM $CARD_TABLE WHERE $CARD_DECK_ID = $deckId"
             val cursor = db.rawQuery(selectQuery, null)
             if (cursor != null) {
- //               cursor.moveToFirst()
-                if (cursor.moveToNext()) {
+                while (cursor.moveToNext()) {
                     cards.add(extractCardFromCursor(cursor))
                 }
             }

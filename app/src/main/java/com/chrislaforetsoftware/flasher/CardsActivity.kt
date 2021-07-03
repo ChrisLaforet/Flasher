@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.InputType
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.ListView
 import com.chrislaforetsoftware.flasher.db.DatabaseHelper
 import com.chrislaforetsoftware.flasher.entities.Card
 import com.chrislaforetsoftware.flasher.entities.Deck
@@ -19,7 +21,7 @@ class CardsActivity() : AppCompatActivity() {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_main)
+		setContentView(R.layout.activity_cards)
 
 		val extras = intent.extras
 		this.deck = extras!!.getSerializable("deck") as Deck
@@ -30,17 +32,39 @@ class CardsActivity() : AppCompatActivity() {
 		actionBar.setDisplayHomeAsUpEnabled(true)
 
 		// TODO: add sort and search icons on action bar
+
 	}
 
-	fun getDatabase(): DatabaseHelper {
+	override fun onResume() {
+		super.onResume()
+		showCards()
+	}
+
+	private fun getDatabase(): DatabaseHelper {
 		return DatabaseHelper(this)
 	}
 
-	fun showCards() {
+	private fun showCards() {
 		// TODO flesh in the show cards/sorted and so on
+		val cardList: List<Card> = this.getDatabase().getCardsByDeckId(deck.id)
+
+		val listItems = arrayOfNulls<String>(cardList.size)
+		for (index in cardList.indices) {
+			listItems[index] = cardList[index].face
+		}
+
+		val listView: ListView? = this.findViewById(R.id.card_list)
+		if (listView != null) {
+			val adapter: ArrayAdapter<String> = ArrayAdapter(
+				this.applicationContext,
+				R.layout.card_listview,
+				listItems
+			)
+			listView.adapter = adapter
+		}
 	}
 
-	fun onClickCreateActionButton(view: View) {
+	fun onClickCreateCardActionButton(view: View) {
 		val card = Card()
 		val now = StringDate(Date())
 		card.created = now.representation
@@ -52,24 +76,24 @@ class CardsActivity() : AppCompatActivity() {
 	private fun editCardContent(view: View, card: Card) {
 		val isNew = card.id == 0
 		val cardPromptBox = AlertDialog.Builder(view.context)
-		cardPromptBox.setTitle((if (isNew) "Create" else "Edit") + "-Flashcard")
+		val title = (if (isNew) "Create" else "Edit") + " Flashcard"
+		cardPromptBox.setTitle(title)
 
 		val layout: LinearLayout = LinearLayout(cardPromptBox.context)
-		layout.setLayoutParams(
-			LinearLayout.LayoutParams(
-				LinearLayout.LayoutParams.MATCH_PARENT,
-				LinearLayout.LayoutParams.WRAP_CONTENT
-			)
-		)
-		layout.setOrientation(LinearLayout.VERTICAL)
+		layout.layoutParams = LinearLayout.LayoutParams(
+			LinearLayout.LayoutParams.MATCH_PARENT,
+			LinearLayout.LayoutParams.WRAP_CONTENT)
+		layout.orientation = LinearLayout.VERTICAL
 
 		val faceText = EditText(cardPromptBox.context)
 		faceText.inputType = InputType.TYPE_CLASS_TEXT
 		faceText.setSingleLine()
+		faceText.setPadding(10, 20, 10, 10)
 		layout.addView(faceText)
 
 		val reverseText = EditText(cardPromptBox.context)
 		reverseText.inputType = InputType.TYPE_CLASS_TEXT
+		reverseText.setPadding(5, 30, 5, 10)
 		layout.addView(reverseText)
 
 		cardPromptBox.setView(layout)

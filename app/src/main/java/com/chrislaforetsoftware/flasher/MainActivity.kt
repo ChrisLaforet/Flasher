@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.InputType
 import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ListView
@@ -33,6 +32,10 @@ class MainActivity : AppCompatActivity() {
 			intent.putExtra("deck", deck)
 			startActivity(intent)
 		}
+	}
+
+	override fun onResume() {
+		super.onResume()
 		showDecks()
 	}
 
@@ -54,19 +57,22 @@ class MainActivity : AppCompatActivity() {
 		if (listView != null) {
 			val adapter: ArrayAdapter<String> = ArrayAdapter(
 				this.applicationContext,
-				R.layout.activity_listview,
+				R.layout.deck_listview,
 				listItems
 			)
 			listView.adapter = adapter
 		}
 	}
 
-	fun onClickCreateActionButton(view: View) {
+	fun onClickCreateDeckActionButton(view: View) {
 		val namePromptBox = AlertDialog.Builder(view.context)
 		namePromptBox.setTitle("Name for Card Deck")
+
 		val editText = EditText(namePromptBox.context)
 		editText.inputType = InputType.TYPE_CLASS_TEXT
 		editText.setSingleLine()
+		editText.setPadding(10, 20, 10, 10)
+
 		namePromptBox.setView(editText)
 
 		namePromptBox.setPositiveButton("OK") { dialog, which ->

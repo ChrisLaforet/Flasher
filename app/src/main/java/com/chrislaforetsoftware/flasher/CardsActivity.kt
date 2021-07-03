@@ -5,10 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.InputType
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.ListView
+import android.widget.*
 import com.chrislaforetsoftware.flasher.db.DatabaseHelper
 import com.chrislaforetsoftware.flasher.entities.Card
 import com.chrislaforetsoftware.flasher.entities.Deck
@@ -85,15 +82,25 @@ class CardsActivity() : AppCompatActivity() {
 			LinearLayout.LayoutParams.WRAP_CONTENT)
 		layout.orientation = LinearLayout.VERTICAL
 
+		val facePrompt = TextView(cardPromptBox.context)
+		facePrompt.text = "Face value" + ":"
+		facePrompt.setPadding(10, 20, 10, 0)
+		layout.addView(facePrompt)
+
 		val faceText = EditText(cardPromptBox.context)
 		faceText.inputType = InputType.TYPE_CLASS_TEXT
 		faceText.setSingleLine()
-		faceText.setPadding(10, 20, 10, 10)
+		faceText.setPadding(10, 10, 10, 10)
 		layout.addView(faceText)
+
+		val reversePrompt = TextView(cardPromptBox.context)
+		reversePrompt.text = "Reverse value" + ":"
+		reversePrompt.setPadding(10, 30, 10, 0)
+		layout.addView(reversePrompt)
 
 		val reverseText = EditText(cardPromptBox.context)
 		reverseText.inputType = InputType.TYPE_CLASS_TEXT
-		reverseText.setPadding(5, 30, 5, 10)
+		reverseText.setPadding(5, 10, 5, 10)
 		layout.addView(reverseText)
 
 		cardPromptBox.setView(layout)

@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.text.InputType
 import android.view.View
 import android.widget.*
+import com.chrislaforetsoftware.flasher.adapters.CardListArrayAdapter
 import com.chrislaforetsoftware.flasher.db.DatabaseHelper
 import com.chrislaforetsoftware.flasher.entities.Card
 import com.chrislaforetsoftware.flasher.entities.Deck
@@ -44,18 +45,18 @@ class CardsActivity() : AppCompatActivity() {
 	private fun showCards() {
 		// TODO flesh in the show cards/sorted and so on
 		val cardList: List<Card> = this.getDatabase().getCardsByDeckId(deck.id)
-
-		val listItems = arrayOfNulls<String>(cardList.size)
-		for (index in cardList.indices) {
-			listItems[index] = cardList[index].face
-		}
+//
+//		val listItems = arrayOfNulls<String>(cardList.size)
+//		for (index in cardList.indices) {
+//			listItems[index] = cardList[index].face
+//		}
 
 		val listView: ListView? = this.findViewById(R.id.card_list)
 		if (listView != null) {
-			val adapter: ArrayAdapter<String> = ArrayAdapter(
-				this.applicationContext,
+			val adapter = CardListArrayAdapter(
+				this,
 				R.layout.card_listview,
-				listItems
+				cardList
 			)
 			listView.adapter = adapter
 		}

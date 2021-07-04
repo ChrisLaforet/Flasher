@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.text.InputType
 import android.view.View
 import android.widget.*
+import android.widget.AdapterView.OnItemClickListener
 import com.chrislaforetsoftware.flasher.adapters.CardListArrayAdapter
 import com.chrislaforetsoftware.flasher.db.DatabaseHelper
 import com.chrislaforetsoftware.flasher.entities.Card
@@ -29,6 +30,7 @@ class CardsActivity() : AppCompatActivity() {
 		actionBar.subtitle = "Flashcard List"
 		actionBar.setDisplayHomeAsUpEnabled(true)
 
+
 		// TODO: add sort and search icons on action bar
 
 	}
@@ -45,18 +47,13 @@ class CardsActivity() : AppCompatActivity() {
 	private fun showCards() {
 		// TODO flesh in the show cards/sorted and so on
 		val cardList: List<Card> = this.getDatabase().getCardsByDeckId(deck.id)
-//
-//		val listItems = arrayOfNulls<String>(cardList.size)
-//		for (index in cardList.indices) {
-//			listItems[index] = cardList[index].face
-//		}
 
 		val listView: ListView? = this.findViewById(R.id.card_list)
 		if (listView != null) {
 			val adapter = CardListArrayAdapter(
-				this,
-				R.layout.card_listview,
-				cardList
+					this,
+					R.layout.card_listview,
+					cardList
 			)
 			listView.adapter = adapter
 		}
@@ -71,6 +68,24 @@ class CardsActivity() : AppCompatActivity() {
 		editCardContent(view, card)
 	}
 
+	fun onClickCheckFlagged(view: View) {
+		val checkBox = view as CheckBox
+		val card: Card = view.getTag(R.id.TAG_CARD) as Card
+		card.flagged = checkBox.isChecked
+
+		val db = DatabaseHelper(this)
+		try {
+			db.updateCard(card)
+		} catch (ee: Exception) {
+			val messageBox = AlertDialog.Builder(this)
+			messageBox.setTitle("Error while saving card")
+			messageBox.setMessage("Error saving flagged changes to " + card.face)
+			messageBox.setCancelable(false)
+			messageBox.setNeutralButton("OK", null)
+			messageBox.show()
+		}
+	}
+
 	private fun editCardContent(view: View, card: Card) {
 		val isNew = card.id == 0
 		val cardPromptBox = AlertDialog.Builder(view.context)
@@ -79,8 +94,8 @@ class CardsActivity() : AppCompatActivity() {
 
 		val layout: LinearLayout = LinearLayout(cardPromptBox.context)
 		layout.layoutParams = LinearLayout.LayoutParams(
-			LinearLayout.LayoutParams.MATCH_PARENT,
-			LinearLayout.LayoutParams.WRAP_CONTENT)
+				LinearLayout.LayoutParams.MATCH_PARENT,
+				LinearLayout.LayoutParams.WRAP_CONTENT)
 		layout.orientation = LinearLayout.VERTICAL
 
 		val facePrompt = TextView(cardPromptBox.context)
@@ -145,4 +160,9 @@ class CardsActivity() : AppCompatActivity() {
 
 		cardPromptBox.show()
 	}
+
+//	override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+//		val selectedCard = parent.getItemAtPosition(position) as Card
+//		editCardContent(view, selectedCard)
+//	}
 }

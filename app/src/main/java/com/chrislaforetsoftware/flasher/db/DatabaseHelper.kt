@@ -153,7 +153,7 @@ class DatabaseHelper(context: Context)
 
     private fun extractDeckFromCursor(cursor: Cursor): Deck {
         val deck = Deck()
-        deck.id = cursor.getColumnIndex(DECK_ID)
+        deck.id = cursor.getInt(cursor.getColumnIndex(DECK_ID))
         deck.name = cursor.getString(cursor.getColumnIndex(DECK_NAME))
         deck.created = cursor.getString(cursor.getColumnIndex(DECK_CREATED))
         deck.lastUse = cursor.getString(cursor.getColumnIndex(DECK_LASTUSE))
@@ -186,7 +186,7 @@ class DatabaseHelper(context: Context)
 
     private fun extractCardFromCursor(cursor: Cursor): Card {
         val card = Card()
-        card.id = cursor.getColumnIndex(CARD_ID)
+        card.id = cursor.getInt(cursor.getColumnIndex(CARD_ID))
         card.deckId = cursor.getInt(cursor.getColumnIndex(CARD_DECK_ID))
         card.face = cursor.getString(cursor.getColumnIndex(CARD_FACE))
         card.reverse = cursor.getString(cursor.getColumnIndex(CARD_REVERSE))

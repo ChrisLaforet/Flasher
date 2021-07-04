@@ -1,0 +1,25 @@
+
+b
+2app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml,8\e\8e27ba16c655f421171956147d0fde89b7d25d17
+d
+4app/src/main/res/drawable/ic_launcher_background.xml,4\9\49845c622cb06d895975c7b1e3f943e320bce688
+h
+8app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml,6\e\6ec7d34b130497a10dc92abcde9b313d370a89df
+z
+Japp/src/test/java/com/chrislaforetsoftware/flasher/types/StringDateTest.kt,d\e\de7dcde11d6c7573972bd31516ddcb14fc0c540d
+Å
+Qapp/src/main/java/com/chrislaforetsoftware/flasher/exception/DatabaseException.kt,e\e\eeaf3b1759f12c7529b1368bbafa619203c2d9db
+@
+app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
+s
+Capp/src/main/java/com/chrislaforetsoftware/flasher/CardsActivity.kt,a\8\a82f44223ca182f50eb8c4316b290ef822fec127
+w
+Gapp/src/main/java/com/chrislaforetsoftware/flasher/db/DatabaseHelper.kt,7\6\760c4d02a320f661f16e22dfe1326e4253be388c
+r
+Bapp/src/main/java/com/chrislaforetsoftware/flasher/MainActivity.kt,0\6\0615d42d855b739321f5ae48e59b42d975119dbf
+P
+ app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
+s
+Capp/src/main/java/com/chrislaforetsoftware/flasher/entities/Card.kt,5\3\53bd425bc4d7dd61c23f87802d715aef55419f4f
+s
+Capp/src/main/java/com/chrislaforetsoftware/flasher/entities/Deck.kt,4\8\48b6393226c965143174de2e6c57be03d2cffb7b

@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.text.InputType
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.EditText
@@ -49,6 +50,22 @@ class MainActivity : AppCompatActivity() {
 
 	private fun getDatabase(): DatabaseHelper {
 		return DatabaseHelper(this)
+	}
+
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		// Handle item selection
+		return when (item.itemId) {
+			R.id.export_deck -> {
+				true
+			}
+			R.id.import_deck -> {
+				true
+			}
+			R.id.settings -> {
+				true
+			}
+			else -> super.onOptionsItemSelected(item)
+		}
 	}
 
 	private fun showDecks() {

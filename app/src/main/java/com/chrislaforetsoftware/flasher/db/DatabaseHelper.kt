@@ -216,7 +216,7 @@ class DatabaseHelper(context: Context)
     fun deleteCard(card: Card) {
         val db: SQLiteDatabase = this.writableDatabase
         db.use {
-            db.delete(CARD_TABLE, "$CARD_ID=$card.id", null)
+            db.delete(CARD_TABLE, "$CARD_ID=${card.id}", null)
         }
     }
 }

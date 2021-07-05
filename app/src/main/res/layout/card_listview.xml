@@ -19,27 +19,28 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <CheckBox
-            android:id="@+id/card_flagged"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:text=""
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/card_edit"
-            app:layout_constraintTop_toTopOf="parent"
-            android:onClick="onClickCheckFlagged" />
+        android:id="@+id/card_flagged"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/card_edit"
+        app:layout_constraintTop_toTopOf="parent"
+        android:onClick="onClickCheckFlagged" />
 
     <Button
-            android:id="@+id/card_edit"
-            android:layout_width="32dp"
-            android:layout_height="fill_parent"
-            android:background="?android:attr/colorBackground"
-            android:drawableTop="@android:drawable/ic_menu_edit"
-            android:textAlignment="center"
-            android:textIsSelectable="true"
-            android:textScaleX="0"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/card_delete"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:id="@+id/card_edit"
+        android:layout_width="32dp"
+        android:layout_height="fill_parent"
+        android:background="?android:attr/colorBackground"
+        android:drawableTop="@android:drawable/ic_menu_edit"
+        android:textAlignment="center"
+        android:textIsSelectable="true"
+        android:textScaleX="0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/card_delete"
+        app:layout_constraintTop_toTopOf="parent"
+        android:onClick="onClickButtonEdit"/>
 
     <Button
         android:id="@+id/card_delete"
@@ -54,7 +55,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:onClick="onClickButtonDelete"/>
 
 </android.support.constraint.ConstraintLayout>
 

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ExportActivity">
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+                android:text="Export to file"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView"
+                android:textSize="18sp"
+                android:paddingBottom="12sp" />
+
+        <TextView
+                android:text="Select file..."
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="12sp"
+                android:id="@+id/textView2" />
+
+        <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"
+                android:paddingTop="12sp"
+                android:paddingBottom="6sp" />
+
+        <TextView
+                android:text="Include flaggings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView"
+                android:textSize="18sp"
+                android:paddingTop="6sp"
+                android:paddingBottom="12sp" />
+
+        <CheckBox
+                android:text=""
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="12sp"
+                android:id="@+id/checkBox" />
+        <View
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"
+                android:paddingTop="12sp"
+                android:paddingBottom="6sp" />
+
+        <Button
+                android:text="Export deck"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/button" />
+
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

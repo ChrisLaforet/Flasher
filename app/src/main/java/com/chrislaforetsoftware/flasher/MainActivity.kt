@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 		setContentView(R.layout.activity_main)
 
 		val ab = supportActionBar
-		ab!!.subtitle = "Card Decks"
+		ab!!.subtitle = getString(R.string.activity_title_card_decks)
 
 		val listView: ListView? = this.findViewById(R.id.deck_list)
 		listView?.setOnItemClickListener { parent, view, position, id ->
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
 
 	fun onClickCreateDeckActionButton(view: View) {
 		val namePromptBox = AlertDialog.Builder(view.context)
-		namePromptBox.setTitle("Name for Card Deck")
+		namePromptBox.setTitle(getString(R.string.title_card_deck_name))
 
 		val editText = EditText(namePromptBox.context)
 		editText.inputType = InputType.TYPE_CLASS_TEXT
@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
 
 		namePromptBox.setView(editText)
 
-		namePromptBox.setPositiveButton("OK") { dialog, which ->
+		namePromptBox.setPositiveButton(getString(R.string.OK)) { dialog, which ->
 			run {
 				val title = editText.getText().toString()
 				if (title.isNotEmpty()) {
@@ -115,17 +115,17 @@ class MainActivity : AppCompatActivity() {
 						showDecks()
 					} catch (ee: Exception) {
 						val messageBox = AlertDialog.Builder(this)
-						messageBox.setTitle("Error while saving deck")
+						messageBox.setTitle(getString(R.string.alert_title_error_saving_deck))
 						messageBox.setMessage("Error saving $title. Is it a duplicate name?")
 						messageBox.setCancelable(false)
-						messageBox.setNeutralButton("OK", null)
+						messageBox.setNeutralButton(getString(R.string.OK), null)
 						messageBox.show()
 					}
 				}
 			}
 		}
 
-		namePromptBox.setNegativeButton("Cancel") { dialog, which -> dialog.cancel()
+		namePromptBox.setNegativeButton(getString(R.string.CANCEL)) { dialog, which -> dialog.cancel()
 		}
 
 		namePromptBox.show()

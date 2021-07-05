@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Flasher</string>
+    <string name="activity_title_card_decks">Card Decks</string>
+    <string name="OK">OK</string>
+    <string name="CANCEL">Cancel</string>
+    <string name="activity_title_flashcard_list">Flashcard List</string>
+    <string name="title_create">Create</string>
+    <string name="title_edit">Edit</string>
+    <string name="title_flashcard">Flashcard</string>
+    <string name="title_face_value">Face value</string>
+    <string name="title_reverse_value">Reverse value</string>
+    <string name="alert_title_confirm_delete">Confirm delete of card</string>
+    <string name="DELETE">Delete</string>
+    <string name="alert_title_error_deleting">Error while deleting card</string>
+    <string name="alert_title_error_saving_card">Error while saving card</string>
+    <string name="title_card_deck_name">Name for Card Deck</string>
+    <string name="alert_title_error_saving_deck">Error while saving deck</string>
 </resources>

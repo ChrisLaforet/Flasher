@@ -27,7 +27,7 @@ class CardsActivity() : AppCompatActivity() {
 
 		val actionBar = supportActionBar
 		actionBar!!.title = deck.name
-		actionBar.subtitle = "Flashcard List"
+		actionBar.subtitle = getString(R.string.activity_title_flashcard_list)
 		actionBar.setDisplayHomeAsUpEnabled(true)
 
 
@@ -94,7 +94,9 @@ class CardsActivity() : AppCompatActivity() {
 	private fun editCardContent(view: View, card: Card) {
 		val isNew = card.id == 0
 		val cardPromptBox = AlertDialog.Builder(view.context)
-		val title = (if (isNew) "Create" else "Edit") + " Flashcard"
+		val createTitle = getString(R.string.title_create)
+		val editTitle = getString(R.string.title_edit)
+		val title = (if (isNew) createTitle else editTitle) + " " + getString(R.string.title_flashcard)
 		cardPromptBox.setTitle(title)
 
 		val layout: LinearLayout = LinearLayout(cardPromptBox.context)
@@ -104,7 +106,7 @@ class CardsActivity() : AppCompatActivity() {
 		layout.orientation = LinearLayout.VERTICAL
 
 		val facePrompt = TextView(cardPromptBox.context)
-		facePrompt.text = "Face value" + ":"
+		facePrompt.text = getString(R.string.title_face_value) + ":"
 		facePrompt.setPadding(10, 20, 10, 0)
 		layout.addView(facePrompt)
 
@@ -116,7 +118,7 @@ class CardsActivity() : AppCompatActivity() {
 		layout.addView(faceText)
 
 		val reversePrompt = TextView(cardPromptBox.context)
-		reversePrompt.text = "Reverse value" + ":"
+		reversePrompt.text = getString(R.string.title_reverse_value) + ":"
 		reversePrompt.setPadding(10, 30, 10, 0)
 		layout.addView(reversePrompt)
 
@@ -128,7 +130,7 @@ class CardsActivity() : AppCompatActivity() {
 
 		cardPromptBox.setView(layout)
 
-		cardPromptBox.setPositiveButton("OK") { dialog, which ->
+		cardPromptBox.setPositiveButton(getString(R.string.OK)) { dialog, which ->
 			run {
 				val face = faceText.getText().toString()
 				if (face.isNotEmpty()) {
@@ -152,17 +154,17 @@ class CardsActivity() : AppCompatActivity() {
 						showCards()
 					} catch (ee: Exception) {
 						val messageBox = AlertDialog.Builder(this)
-						messageBox.setTitle("Error while saving card")
+						messageBox.setTitle(getString(R.string.alert_title_error_saving_card))
 						messageBox.setMessage("Error saving $face. Is it a duplicate value?")
 						messageBox.setCancelable(false)
-						messageBox.setNeutralButton("OK", null)
+						messageBox.setNeutralButton(getString(R.string.OK), null)
 						messageBox.show()
 					}
 				}
 			}
 		}
 
-		cardPromptBox.setNegativeButton("Cancel") { dialog, which -> dialog.cancel()
+		cardPromptBox.setNegativeButton(getString(R.string.CANCEL)) { dialog, which -> dialog.cancel()
 		}
 		cardPromptBox.show()
 	}
@@ -171,14 +173,14 @@ class CardsActivity() : AppCompatActivity() {
 		val card: Card = view.getTag(R.id.TAG_CARD) as Card
 
 		val messageBox = AlertDialog.Builder(this)
-		messageBox.setTitle("Confirm delete of card")
+		messageBox.setTitle(getString(R.string.alert_title_confirm_delete))
 		messageBox.setMessage("Are you certain you want to delete card for '${card.face}'")
-		messageBox.setPositiveButton("Delete") { dialog, which ->
+		messageBox.setPositiveButton(getString(R.string.DELETE)) { dialog, which ->
 			run {
 				deleteCard(card)
 			}
 		}
-		messageBox.setNegativeButton("Cancel") { dialog, which -> dialog.cancel() }
+		messageBox.setNegativeButton(getString(R.string.CANCEL)) { dialog, which -> dialog.cancel() }
 		messageBox.show()
 	}
 
@@ -189,10 +191,10 @@ class CardsActivity() : AppCompatActivity() {
 			showCards()
 		} catch (ee: Exception) {
 			val messageBox = AlertDialog.Builder(this)
-			messageBox.setTitle("Error while deleting card")
+			messageBox.setTitle(getString(R.string.alert_title_error_deleting))
 			messageBox.setMessage("Error while deleting ${card.face}.")
 			messageBox.setCancelable(false)
-			messageBox.setNeutralButton("OK", null)
+			messageBox.setNeutralButton(getString(R.string.OK), null)
 			messageBox.show()
 		}
 	}

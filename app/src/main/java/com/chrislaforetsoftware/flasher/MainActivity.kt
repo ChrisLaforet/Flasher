@@ -56,6 +56,8 @@ class MainActivity : AppCompatActivity() {
 		// Handle item selection
 		return when (item.itemId) {
 			R.id.export_deck -> {
+				val intent = Intent(this, ExportActivity::class.java)
+				startActivity(intent)
 				true
 			}
 			R.id.import_deck -> {

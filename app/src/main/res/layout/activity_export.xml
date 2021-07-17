@@ -40,31 +40,6 @@
                 android:paddingTop="12sp"
                 android:paddingBottom="6sp" />
 
-        <TextView
-                android:text="Export to file"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/exportTitle"
-                android:textSize="18sp"
-                android:paddingBottom="12sp"
-                android:paddingTop="6sp" />
-
-        <TextView
-                android:text="Select file..."
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="12sp"
-                android:id="@+id/outputFile"
-                android:onClick="selectFileClick" />
-
-        <View
-                android:id="@+id/divider1"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?android:attr/listDivider"
-                android:paddingTop="12sp"
-                android:paddingBottom="6sp" />
-
         <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="46sp">
@@ -94,6 +69,35 @@
 
         </android.support.constraint.ConstraintLayout>
 
+        <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="46sp">
+
+            <TextView
+                    android:text="Include statistics"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/statisticsTitle"
+                    android:textSize="18sp"
+                    android:paddingTop="6sp"
+                    android:paddingBottom="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/includeStatisticsCheckbox"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+            <CheckBox
+                    android:text=""
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:paddingBottom="12sp"
+                    android:id="@+id/includeStatisticsCheckbox"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
         <View
                 android:id="@+id/divider2"
                 android:layout_width="match_parent"
@@ -103,10 +107,11 @@
                 android:paddingBottom="6sp" />
 
         <Button
-                android:text="Export deck"
+                android:id="@+id/exportButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/exportButton" />
+                android:onClick="exportDeckClick"
+                android:text="Export deck" />
 
     </LinearLayout>
 

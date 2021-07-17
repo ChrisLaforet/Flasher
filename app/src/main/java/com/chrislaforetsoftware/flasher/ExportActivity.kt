@@ -3,9 +3,20 @@ package com.chrislaforetsoftware.flasher
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.widget.CheckBox
+import android.widget.TextView
+import android.widget.Toast
+import com.chrislaforetsoftware.flasher.db.DatabaseHelper
 import com.chrislaforetsoftware.flasher.entities.Deck
+import java.io.FileOutputStream
+import java.io.OutputStreamWriter
+
 
 class ExportActivity() : AppCompatActivity() {
+
+	private lateinit var sourceDeck: TextView
+	private lateinit var includeFlaggingCheckbox: CheckBox
+	private lateinit var includeStatisticsCheckbox: CheckBox
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -15,14 +26,51 @@ class ExportActivity() : AppCompatActivity() {
 		actionBar!!.title = "Export deck"
 		actionBar.setDisplayHomeAsUpEnabled(true)
 
+		sourceDeck = this.findViewById(R.id.sourceDeck)
+		includeFlaggingCheckbox = this.findViewById(R.id.includeFlaggingCheckbox)
+		includeStatisticsCheckbox = this.findViewById(R.id.includeStatisticsCheckbox)
+	}
 
+	private fun getDatabase(): DatabaseHelper {
+		return DatabaseHelper(this)
 	}
 
 	fun selectDeckClick(view: View) {
 
 	}
 
-	fun selectFileClick(view: View) {
+	private fun getSelectedDeck(): Deck {
+// FOR NOW - Just snag the first item in the list of decks
+		val decks = this.getDatabase().getDecks();
+		if (decks.isEmpty()) {
+			throw Exception("A deck has not been selected")
+		}
+		return decks[0]
+	}
 
+	fun exportDeckClick(view: View) {
+		try {
+			val deck = getSelectedDeck()
+			exportDeckToFile(deck)
+		} catch (e: Exception) {
+			Toast.makeText(baseContext,
+					e.message,
+					Toast.LENGTH_SHORT).show()
+		}
+	}
+
+	private fun exportDeckToFile(deck: Deck) {
+		val filePathName = "Flasher.${deck.id}.json"
+		try {
+			val outputFile: FileOutputStream = openFileOutput(filePathName, MODE_PRIVATE)
+			val outputWriter = OutputStreamWriter(outputFile)
+//			outputWriter.write(textmsg.getText().toString())
+			outputWriter.close()
+			Toast.makeText(baseContext,
+					"File exported successfully!",
+					Toast.LENGTH_SHORT).show()
+		} catch (e: Exception) {
+			e.printStackTrace()
+		}
 	}
 }

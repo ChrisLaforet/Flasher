@@ -1,5 +1,6 @@
 package com.chrislaforetsoftware.flasher
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -10,9 +11,7 @@ import com.chrislaforetsoftware.flasher.db.DatabaseHelper
 import com.chrislaforetsoftware.flasher.entities.Deck
 import com.chrislaforetsoftware.flasher.serializers.DeckSerializer
 import java.io.FileInputStream
-import java.io.FileOutputStream
 import java.io.InputStreamReader
-import java.io.OutputStreamWriter
 
 class ImportActivity() : AppCompatActivity() {
 
@@ -41,10 +40,23 @@ class ImportActivity() : AppCompatActivity() {
         return DatabaseHelper(this)
     }
 
-
     fun selectFileToImportClick(view: View) {
-
+        val intent = Intent(this, FileSelection::class.java
+                // USE https://developer.android.com/training/basics/intents/result
+        startActivityForResult(intent, 1)
     }
+
+//    fun onActivityResult(@JvmField var requestCode: Int, @JvmField var resultCode: Int, @JvmField var data: Intent) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        if (requestCode == 1) {
+//            if (resultCode == RESULT_OK) {
+//                val strEditText = data.getStringExtra("fileName")
+//            }
+//            if (resultCode == RESULT_CANCELED) {
+//
+//            }
+//        }
+//    }
 
     fun selectDeckClick(view: View) {
 
@@ -93,8 +105,8 @@ deckWithCards.deck.name =  deckWithCards.deck.name + "." + getDatabase().getDeck
         }
 
         Toast.makeText(baseContext,
-            "Deck ${deck.name} has been imported from file!",
-            Toast.LENGTH_SHORT).show()
+                "Deck ${deck.name} has been imported from file!",
+                Toast.LENGTH_SHORT).show()
     }
 
 }

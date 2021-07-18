@@ -10,7 +10,9 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.Flasher">
         <activity android:name=".FileSelection">
-
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".ImportActivity" />
         </activity>
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -21,10 +23,8 @@
         <activity android:name=".CardsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.CARDS" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value=".MainActivity" />
@@ -32,7 +32,6 @@
         <activity android:name=".ExportActivity">
             <intent-filter>
                 <action android:name="android.intent.action.EXPORT" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 

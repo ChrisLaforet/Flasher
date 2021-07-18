@@ -1,13 +1,13 @@
 package com.chrislaforetsoftware.flasher
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.ArrayAdapter
 import android.widget.ListView
-import com.chrislaforetsoftware.flasher.adapters.CardListArrayAdapter
-import com.chrislaforetsoftware.flasher.entities.Card
 
 class FileSelection : AppCompatActivity() {
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_file_selection)
@@ -15,6 +15,15 @@ class FileSelection : AppCompatActivity() {
 		val actionBar = supportActionBar
 		actionBar!!.title = "Select file"
 		actionBar.setDisplayHomeAsUpEnabled(true)
+
+		val listView: ListView? = this.findViewById(R.id.file_list)
+		listView?.setOnItemClickListener { parent, view, position, id ->
+			val element = parent.getItemAtPosition(position) 	// The item that was clicked
+			val intent = Intent()
+			intent.putExtra("fileName", element.toString())
+			setResult(RESULT_OK, intent);
+			finish();
+		}
 	}
 
 	override fun onResume() {
@@ -32,7 +41,7 @@ class FileSelection : AppCompatActivity() {
 			}
 		}
 
-		val listView: ListView? = this.findViewById(R.id.card_list)
+		val listView: ListView? = this.findViewById(R.id.file_list)
 		if (listView != null) {
 			val adapter: ArrayAdapter<String> = ArrayAdapter(
 					this.applicationContext,

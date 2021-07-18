@@ -61,8 +61,9 @@ class MainActivity : AppCompatActivity() {
 				true
 			}
 			R.id.import_deck -> {
-				true
-			}
+				val intent = Intent(this, ImportActivity::class.java)
+				startActivity(intent)
+				true			}
 			R.id.settings -> {
 				true
 			}

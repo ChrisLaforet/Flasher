@@ -7,7 +7,9 @@ import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
 import com.chrislaforetsoftware.flasher.db.DatabaseHelper
+import com.chrislaforetsoftware.flasher.entities.Card
 import com.chrislaforetsoftware.flasher.entities.Deck
+import com.chrislaforetsoftware.flasher.serializers.DeckSerializer
 import java.io.FileOutputStream
 import java.io.OutputStreamWriter
 
@@ -51,7 +53,7 @@ class ExportActivity() : AppCompatActivity() {
 	fun exportDeckClick(view: View) {
 		try {
 			val deck = getSelectedDeck()
-			exportDeckToFile(deck)
+			exportDeckToFile(deck, this.getDatabase().getCardsByDeckId(deck.id))
 		} catch (e: Exception) {
 			Toast.makeText(baseContext,
 					e.message,
@@ -59,12 +61,15 @@ class ExportActivity() : AppCompatActivity() {
 		}
 	}
 
-	private fun exportDeckToFile(deck: Deck) {
+	private fun exportDeckToFile(deck: Deck, cards: List<Card>) {
 		val filePathName = "Flasher.${deck.id}.json"
 		try {
 			val outputFile: FileOutputStream = openFileOutput(filePathName, MODE_PRIVATE)
 			val outputWriter = OutputStreamWriter(outputFile)
-//			outputWriter.write(textmsg.getText().toString())
+
+			val serialized = DeckSerializer.serializeDeck(deck, cards)
+			outputWriter.write(serialized)
+
 			outputWriter.close()
 			Toast.makeText(baseContext,
 					"File exported successfully!",

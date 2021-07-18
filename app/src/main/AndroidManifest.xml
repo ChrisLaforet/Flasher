@@ -32,6 +32,16 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
+        <activity android:name=".ImportActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.IMPORT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value=".MainActivity" />
         </activity>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ImportActivity">
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:text="Select file to import"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/importFileTitle"
+            android:textSize="18sp"
+            android:paddingTop="12sp"
+            android:paddingBottom="12sp" />
+
+        <TextView
+            android:text="Select file..."
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="12sp"
+            android:id="@+id/fileToImport"
+            android:onClick="selectFileToImportClick" />
+
+        <View
+            android:id="@+id/divider0"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            android:paddingTop="12sp"
+            android:paddingBottom="6sp" />
+
+        <TextView
+                android:text="Import to deck"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/deckTitle"
+                android:textSize="18sp"
+                android:paddingTop="12sp"
+                android:paddingBottom="12sp" />
+
+        <TextView
+                android:text="Select deck..."
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="12sp"
+                android:id="@+id/destinationDeck"
+                android:onClick="selectDeckClick" />
+
+        <View
+                android:id="@+id/divider1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"
+                android:paddingTop="12sp"
+                android:paddingBottom="6sp" />
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="46sp">
+
+            <TextView
+                android:text="Overwrite existing cards"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/overwriteExistingTitle"
+                android:textSize="18sp"
+                android:paddingTop="6sp"
+                android:paddingBottom="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/overwriteExistingCheckbox"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <CheckBox
+                android:text=""
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:paddingBottom="12sp"
+                android:id="@+id/overwriteExistingCheckbox"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="46sp">
+
+            <TextView
+                    android:text="Include flaggings"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/flaggingTitle"
+                    android:textSize="18sp"
+                    android:paddingTop="6sp"
+                    android:paddingBottom="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/includeFlaggingCheckbox"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+            <CheckBox
+                    android:text=""
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:paddingBottom="12sp"
+                    android:id="@+id/includeFlaggingCheckbox"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="46sp">
+
+            <TextView
+                    android:text="Include statistics"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/statisticsTitle"
+                    android:textSize="18sp"
+                    android:paddingTop="6sp"
+                    android:paddingBottom="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/includeStatisticsCheckbox"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+            <CheckBox
+                    android:text=""
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:paddingBottom="12sp"
+                    android:id="@+id/includeStatisticsCheckbox"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <View
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"
+                android:paddingTop="12sp"
+                android:paddingBottom="6sp" />
+
+        <Button
+                android:id="@+id/importButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="importDeckClick"
+                android:text="Import deck" />
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

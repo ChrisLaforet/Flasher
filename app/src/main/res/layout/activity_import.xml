@@ -16,7 +16,7 @@
             app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
-            android:text="Select file to import"
+            android:text="@string/select_file_to_import"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/importFileTitle"
@@ -25,7 +25,7 @@
             android:paddingBottom="12sp" />
 
         <TextView
-            android:text="Select file..."
+            android:text="@string/select_file"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="12sp"
@@ -41,7 +41,7 @@
             android:paddingBottom="6sp" />
 
         <TextView
-                android:text="Import to deck"
+                android:text="@string/import_to_deck"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/deckTitle"
@@ -50,7 +50,7 @@
                 android:paddingBottom="12sp" />
 
         <TextView
-                android:text="Select deck..."
+                android:text="@string/select_deck"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="12sp"
@@ -70,7 +70,7 @@
             android:layout_height="46sp">
 
             <TextView
-                android:text="Overwrite existing cards"
+                android:text="@string/overwrite_existing_cards"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:id="@+id/overwriteExistingTitle"
@@ -99,7 +99,7 @@
                 android:layout_height="46sp">
 
             <TextView
-                    android:text="Include flaggings"
+                    android:text="@string/include_flaggings"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:id="@+id/flaggingTitle"
@@ -128,7 +128,7 @@
                 android:layout_height="46sp">
 
             <TextView
-                    android:text="Include statistics"
+                    android:text="@string/include_statistics"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:id="@+id/statisticsTitle"
@@ -165,7 +165,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="importDeckClick"
-                android:text="Import deck" />
+                android:text="@string/import_deck" />
 
     </LinearLayout>
 

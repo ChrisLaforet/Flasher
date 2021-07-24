@@ -13,7 +13,7 @@ class FileSelection : AppCompatActivity() {
 		setContentView(R.layout.activity_file_selection)
 
 		val actionBar = supportActionBar
-		actionBar!!.title = "Select file"
+		actionBar!!.title = "Select file to import"
 		actionBar.setDisplayHomeAsUpEnabled(true)
 
 		val listView: ListView? = this.findViewById(R.id.file_list)

@@ -62,7 +62,7 @@ class ExportActivity() : AppCompatActivity() {
 	}
 
 	private fun exportDeckToFile(deck: Deck, cards: List<Card>) {
-		val filePathName = "Flasher.${deck.id}.json"
+		val filePathName = "Flasher.${deck.id}.${deck.getDeckNameAsFilename()}.json"
 		try {
 			val outputFile: FileOutputStream = openFileOutput(filePathName, MODE_PRIVATE)
 			val outputWriter = OutputStreamWriter(outputFile)

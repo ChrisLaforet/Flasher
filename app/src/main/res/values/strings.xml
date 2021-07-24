@@ -15,4 +15,16 @@
     <string name="alert_title_error_saving_card">Error while saving card</string>
     <string name="title_card_deck_name">Name for Card Deck</string>
     <string name="alert_title_error_saving_deck">Error while saving deck</string>
+
+    <string name="select_file_to_import">Select file to import</string>
+    <string name="import_to_deck">Import to deck</string>
+    <string name="deck_to_export">Deck to export</string>
+    <string name="select_file">Select file...</string>
+    <string name="select_deck">Select deck...</string>
+    <string name="overwrite_existing_cards">Overwrite existing cards</string>
+    <string name="include_flaggings">Include flaggings</string>
+    <string name="include_statistics">Include statistics</string>
+    <string name="import_deck">Import deck</string>
+    <string name="export_deck">Export deck</string>
+
 </resources>

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
@@ -20,13 +21,14 @@ class ImportActivity() : AppCompatActivity() {
     private lateinit var overwriteExistingCheckbox: CheckBox
     private lateinit var includeFlaggingCheckbox: CheckBox
     private lateinit var includeStatisticsCheckbox: CheckBox
+    private lateinit var importButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_import)
 
         val actionBar = supportActionBar
-        actionBar!!.title = "Import deck"
+        actionBar!!.title = getString(R.string.import_deck)
         actionBar.setDisplayHomeAsUpEnabled(true)
 
         fileToImport = this.findViewById(R.id.fileToImport)
@@ -34,6 +36,8 @@ class ImportActivity() : AppCompatActivity() {
         overwriteExistingCheckbox = this.findViewById(R.id.overwriteExistingCheckbox)
         includeFlaggingCheckbox = this.findViewById(R.id.includeFlaggingCheckbox)
         includeStatisticsCheckbox = this.findViewById(R.id.includeStatisticsCheckbox)
+        importButton = this.findViewById(R.id.importButton)
+        importButton.isEnabled = false
     }
 
     private fun getDatabase(): DatabaseHelper {
@@ -41,22 +45,28 @@ class ImportActivity() : AppCompatActivity() {
     }
 
     fun selectFileToImportClick(view: View) {
-        val intent = Intent(this, FileSelection::class.java
+        val intent = Intent(this, FileSelection::class.java);
                 // USE https://developer.android.com/training/basics/intents/result
         startActivityForResult(intent, 1)
     }
 
-//    fun onActivityResult(@JvmField var requestCode: Int, @JvmField var resultCode: Int, @JvmField var data: Intent) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if (requestCode == 1) {
-//            if (resultCode == RESULT_OK) {
-//                val strEditText = data.getStringExtra("fileName")
-//            }
-//            if (resultCode == RESULT_CANCELED) {
-//
-//            }
-//        }
-//    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK && data != null) {
+            val filename: String = data.getStringExtra("fileName") as String
+            if (filename.isNotEmpty()) {
+                fileToImport.text = filename
+                checkActivationForImportButton()
+            }
+        }
+    }
+
+    private fun checkActivationForImportButton() {
+        if (fileToImport.text != getString(R.string.select_file) &&
+                destinationDeck.text != getString(R.string.select_deck)) {
+            importButton.isEnabled = true
+        }
+    }
 
     fun selectDeckClick(view: View) {
 

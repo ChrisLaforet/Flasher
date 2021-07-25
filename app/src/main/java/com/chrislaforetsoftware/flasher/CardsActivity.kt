@@ -4,6 +4,8 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.InputType
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
@@ -30,9 +32,12 @@ class CardsActivity() : AppCompatActivity() {
 		actionBar.subtitle = getString(R.string.activity_title_flashcard_list)
 		actionBar.setDisplayHomeAsUpEnabled(true)
 
+	}
 
-		// TODO: add sort and search icons on action bar
-
+	override fun onCreateOptionsMenu(menu: Menu): Boolean {
+		val inflater: MenuInflater = menuInflater
+		inflater.inflate(R.menu.menu_cards, menu)
+		return true
 	}
 
 	override fun onResume() {

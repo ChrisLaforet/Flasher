@@ -3,13 +3,13 @@
     <item
         android:id="@+id/export_deck"
         android:icon="@android:drawable/ic_menu_upload"
-        android:title="Export deck" />
+        android:title="@string/export_deck" />
     <item
         android:id="@+id/import_deck"
         android:icon="@android:drawable/stat_sys_download"
-        android:title="Import deck" />
+        android:title="@string/import_deck" />
     <item
         android:id="@+id/settings"
         android:icon="@android:drawable/ic_menu_preferences"
-        android:title="Settings" />
+        android:title="@string/settings" />
 </menu>

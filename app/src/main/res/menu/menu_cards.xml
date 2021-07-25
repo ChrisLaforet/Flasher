@@ -12,8 +12,13 @@
 			android:title="@string/sort_view"
 			app:showAsAction="always" />
 	<item
+			android:id="@+id/filter_card"
+			android:icon="@android:drawable/ic_menu_search"
+			android:title="@string/filter_cards"
+			app:showAsAction="ifRoom" />
+	<item
 			android:id="@+id/start_quiz"
 			android:icon="@android:drawable/checkbox_on_background"
 			android:title="@string/start_quiz"
-			app:showAsAction="always" />
+			app:showAsAction="ifRoom" />
 </menu>

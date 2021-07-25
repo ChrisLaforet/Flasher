@@ -34,5 +34,7 @@
     <string name="flip_cards">Flip cards</string>
     <string name="sort_view">Sort view</string>
     <string name="start_quiz">Start quiz</string>
+    <string name="search_for_card">Search for card</string>
+    <string name="filter_cards">Filter cards</string>
 
 </resources>

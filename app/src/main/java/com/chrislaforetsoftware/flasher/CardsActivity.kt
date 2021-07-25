@@ -1,9 +1,11 @@
 package com.chrislaforetsoftware.flasher
 
+import android.R.id.message
 import android.app.AlertDialog
-import android.content.Intent
+import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.text.Editable
 import android.text.InputType
 import android.view.Menu
 import android.view.MenuInflater
@@ -17,10 +19,15 @@ import com.chrislaforetsoftware.flasher.entities.Deck
 import com.chrislaforetsoftware.flasher.types.StringDate
 import java.util.*
 
+
 class CardsActivity() : AppCompatActivity() {
 
 	lateinit var deck: Deck;
+	private lateinit var activeFilterNotification: TextView
+
 	var showFace = true
+	var sortAscending = true
+	var filterOn: String = ""
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -32,6 +39,8 @@ class CardsActivity() : AppCompatActivity() {
 		val actionBar = supportActionBar
 		actionBar!!.title = deck.name
 		actionBar.subtitle = getString(R.string.activity_title_flashcard_list)
+		activeFilterNotification = this.findViewById(R.id.active_filter_notification)
+		activeFilterNotification.visibility = View.GONE
 		actionBar.setDisplayHomeAsUpEnabled(true)
 	}
 
@@ -59,7 +68,14 @@ class CardsActivity() : AppCompatActivity() {
 				true
 			}
 			R.id.sort_order -> {
-				true			}
+				sortAscending = !sortAscending
+				showCards()
+				true
+			}
+			R.id.filter_card -> {
+				promptForFilter()
+				true
+			}
 			R.id.start_quiz -> {
 				true
 			}
@@ -67,9 +83,38 @@ class CardsActivity() : AppCompatActivity() {
 		}
 	}
 
+	private fun promptForFilter() {
+		val filterFor: EditText = EditText(this)
+		filterFor.isSingleLine = true
+		AlertDialog.Builder(this)
+				.setTitle("Filter cards for partial word, word, or phrase")
+				.setView(filterFor)
+				.setPositiveButton("Filter", DialogInterface.OnClickListener { dialog, whichButton ->
+					if (filterFor.text.isNotEmpty()) {
+						filterOn = filterFor.text.toString()
+					}
+					showCards()
+				})
+				.setNegativeButton("Clear", DialogInterface.OnClickListener { dialog, whichButton ->
+					filterOn = ""
+					showCards()
+				}).show()
+	}
+
 	private fun showCards() {
-		// TODO flesh in the show cards/sorted and so on
-		val cardList: List<Card> = this.getDatabase().getCardsByDeckId(deck.id)
+		var cardList: List<Card> = sortCards(this.getDatabase().getCardsByDeckId(deck.id))
+		if (filterOn.isNotEmpty()) {
+			activeFilterNotification.visibility = View.VISIBLE
+			activeFilterNotification.text = "Filtering cards on: ${ filterOn }"
+			cardList = cardList.filter {
+				val lowercaseFace = it.face.toLowerCase()
+				val lowercaseReverse = it.reverse.toLowerCase()
+				val lowercaseFilterOn = filterOn.toLowerCase()
+				lowercaseFace.indexOf(lowercaseFilterOn) >= 0 || lowercaseReverse.indexOf(lowercaseFilterOn) >= 0
+			}
+		} else {
+			activeFilterNotification.visibility = View.GONE
+		}
 
 		val listView: ListView? = this.findViewById(R.id.card_list)
 		if (listView != null) {
@@ -81,6 +126,13 @@ class CardsActivity() : AppCompatActivity() {
 			)
 			listView.adapter = adapter
 		}
+	}
+
+	private fun sortCards(cards: List<Card>): List<Card> {
+		if (sortAscending) {
+			return cards.sortedBy { if (showFace) it.face else it.reverse }
+		}
+		return cards.sortedByDescending { if (showFace) it.face else it.reverse }
 	}
 
 	fun onClickCreateCardActionButton(view: View) {

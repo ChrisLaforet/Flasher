@@ -9,12 +9,15 @@ import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
 import com.chrislaforetsoftware.flasher.db.DatabaseHelper
+import com.chrislaforetsoftware.flasher.entities.Card
 import com.chrislaforetsoftware.flasher.entities.Deck
+import com.chrislaforetsoftware.flasher.pickers.DeckPicker
+import com.chrislaforetsoftware.flasher.pickers.IDeckPickerListener
 import com.chrislaforetsoftware.flasher.serializers.DeckSerializer
 import java.io.FileInputStream
 import java.io.InputStreamReader
 
-class ImportActivity() : AppCompatActivity() {
+class ImportActivity() : AppCompatActivity(), IDeckPickerListener {
 
     private lateinit var fileToImport: TextView
     private lateinit var destinationDeck: TextView
@@ -22,6 +25,8 @@ class ImportActivity() : AppCompatActivity() {
     private lateinit var includeFlaggingCheckbox: CheckBox
     private lateinit var includeStatisticsCheckbox: CheckBox
     private lateinit var importButton: Button
+
+    private var isCreateNewDeck = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,8 +51,12 @@ class ImportActivity() : AppCompatActivity() {
 
     fun selectFileToImportClick(view: View) {
         val intent = Intent(this, FileSelection::class.java);
-                // USE https://developer.android.com/training/basics/intents/result
         startActivityForResult(intent, 1)
+    }
+
+    fun selectDeckClick(view: View) {
+        val picker = DeckPicker(this, getDatabase(), getString(R.string.destination_deck_prompt), true, this)
+        picker.selectDeck()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -61,62 +70,97 @@ class ImportActivity() : AppCompatActivity() {
         }
     }
 
+    override fun onCreateDeckPicked() {
+        destinationDeck.text = getString(R.string.create_new_deck)
+        isCreateNewDeck = true
+        checkActivationForImportButton()
+    }
+
+    override fun onDeckPicked(deckName: String) {
+        destinationDeck.text = deckName
+        isCreateNewDeck = false
+        checkActivationForImportButton()
+    }
+
     private fun checkActivationForImportButton() {
-        if (fileToImport.text != getString(R.string.select_file) &&
-                destinationDeck.text != getString(R.string.select_deck)) {
+        if (fileToImport.text != getString(R.string.file_prompt) &&
+                destinationDeck.text != getString(R.string.deck_prompt)) {
             importButton.isEnabled = true
         }
     }
 
-    fun selectDeckClick(view: View) {
-
-    }
-
-    private fun getSelectedFileToImport(): String {
-// FOR NOW - just use hard coded filename
-        return "Flasher.1.json"
-    }
-
-    private fun getSelectedDeck(): Deck? {
-// FOR NOW - create a new deck
-return null
-//        val decks = this.getDatabase().getDecks();
-//        if (decks.isEmpty()) {
-//            return null
-//        }
-//        return decks[0]
-    }
-
     fun importDeckClick(view: View) {
         try {
-            val inputFile: FileInputStream = openFileInput(getSelectedFileToImport())
+            val filename: String = fileToImport.text as String
+            var targetDeck: Deck? = null
+            if (isCreateNewDeck) {
+                targetDeck = Deck()
+                targetDeck.name = filename + "." + getDatabase().getDecks().size
+                getDatabase().createDeck(targetDeck)
+            } else {
+                val deckName: String = destinationDeck.text as String
+                targetDeck = getDatabase().getDeckByName(deckName)
+            }
+
+            if (targetDeck == null) {
+                Toast.makeText(this, "Cannot get or create deck for import", Toast.LENGTH_LONG).show()
+                return
+            }
+
+            val inputFile: FileInputStream = openFileInput(filename)
             val inputReader = InputStreamReader(inputFile)
             val serializedContent: String = inputReader.readText()
             inputFile.close()
 
-            importFileToDeck(serializedContent, getSelectedDeck())
+            importFileToDeck(serializedContent, targetDeck)
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun importFileToDeck(serializedContent: String, targetDeck: Deck?) {
+    private fun importFileToDeck(serializedContent: String, targetDeck: Deck) {
+        val cardFaces: MutableMap<String, Int> = mutableMapOf()
+        getDatabase().getCardsByDeckId(targetDeck.id).forEach { it -> cardFaces[it.face] = it.id }
+
         val deckWithCards = DeckSerializer.deserializeDeck(serializedContent)
-        if (targetDeck == null) {
-// TODO: prevent conflict of name
-deckWithCards.deck.name =  deckWithCards.deck.name + "." + getDatabase().getDecks().size
-            getDatabase().createDeck(deckWithCards.deck)
-        }
-        val deck: Deck = targetDeck ?: deckWithCards.deck
         for (card in deckWithCards.cards) {
-            //TODO: determine if card already exists and if so just update it!
-            card.deckId = deck.id
-            getDatabase().createCard(card)
+            if (cardFaces.containsKey(card.face)) {
+                if (overwriteExistingCheckbox.isChecked) {
+                    val cardId: Int = cardFaces[card.face] as Int
+                    val existingCard: Card? = getDatabase().getCardById(cardId)
+
+                    if (existingCard == null) {
+                        saveNewCardAndAddToLookup(card, targetDeck, cardFaces)
+                    } else {
+                        saveNewDetailsToExistingCard(existingCard, card)
+                    }
+                }
+            } else {
+                saveNewCardAndAddToLookup(card, targetDeck, cardFaces)
+            }
         }
 
         Toast.makeText(baseContext,
-                "Deck ${deck.name} has been imported from file!",
+                "Deck ${targetDeck.name} has been imported from file!",
                 Toast.LENGTH_SHORT).show()
     }
 
+    private fun saveNewCardAndAddToLookup(card: Card, targetDeck: Deck, cardFaces: MutableMap<String, Int>) {
+        card.deckId = targetDeck.id
+        getDatabase().createCard(card)
+        cardFaces[card.face] = card.id
+    }
+
+    private fun saveNewDetailsToExistingCard(existingCard: Card, importedCard: Card) {
+        existingCard.reverse = importedCard.reverse
+        if (includeFlaggingCheckbox.isChecked) {
+            existingCard.flagged = importedCard.flagged
+        }
+        if (includeStatisticsCheckbox.isChecked) {
+            existingCard.correct = importedCard.correct
+            existingCard.quizzes = importedCard.quizzes
+            existingCard.misses = importedCard.misses
+        }
+        getDatabase().updateCard(existingCard)
+    }
 }

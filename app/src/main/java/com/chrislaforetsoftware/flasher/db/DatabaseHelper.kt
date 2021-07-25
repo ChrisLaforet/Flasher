@@ -151,6 +151,14 @@ class DatabaseHelper(context: Context)
         return decks
     }
 
+    fun getDeckNames(): List<String> {
+        val deckNames: MutableList<String> = mutableListOf()
+        for (deck in getDecks()) {
+            deckNames.add(deck.name)
+        }
+        return deckNames
+    }
+
     private fun extractDeckFromCursor(cursor: Cursor): Deck {
         val deck = Deck()
         deck.id = cursor.getInt(cursor.getColumnIndex(DECK_ID))
@@ -211,6 +219,21 @@ class DatabaseHelper(context: Context)
             }
         }
         return cards
+    }
+
+    fun getCardById(id: Int): Card? {
+        var card: Card? = null
+        val db: SQLiteDatabase = this.readableDatabase
+        db.use {
+            val selectQuery = "SELECT * FROM $CARD_TABLE WHERE $CARD_ID = $id"
+            val cursor = db.rawQuery(selectQuery, null)
+            if (cursor != null) {
+                while (cursor.moveToNext()) {
+                    card = extractCardFromCursor(cursor)
+                }
+            }
+        }
+        return card
     }
 
     fun deleteCard(card: Card) {

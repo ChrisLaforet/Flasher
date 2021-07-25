@@ -16,7 +16,7 @@
             app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
-            android:text="@string/select_file_to_import"
+            android:text="@string/file_to_import_prompt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/importFileTitle"
@@ -25,7 +25,7 @@
             android:paddingBottom="12sp" />
 
         <TextView
-            android:text="@string/select_file"
+            android:text="@string/file_prompt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="12sp"
@@ -50,7 +50,7 @@
                 android:paddingBottom="12sp" />
 
         <TextView
-                android:text="@string/select_deck"
+                android:text="@string/deck_prompt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="12sp"

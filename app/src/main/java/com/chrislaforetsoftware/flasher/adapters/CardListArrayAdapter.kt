@@ -15,6 +15,7 @@ import com.chrislaforetsoftware.flasher.entities.Card
 class CardListArrayAdapter(
         private val activity: Activity,
         private val layoutResource: Int,
+        private val showFace: Boolean,
         private val cardsList: List<Card>) : ArrayAdapter<Card>(activity, layoutResource, cardsList) {
 
     override fun getItemId(position: Int): Long {
@@ -43,7 +44,8 @@ class CardListArrayAdapter(
             viewHolder = rowView.tag as ViewHolder
         }
         val card: Card = cardsList.get(position)
-        viewHolder.cardFace?.text = card.face
+        val textForCard: String = if (showFace) card.face else card.reverse
+        viewHolder.cardFace?.text = textForCard
 
         viewHolder.flagged?.isChecked = card.flagged
         viewHolder.flagged?.setTag(R.id.TAG_POSITION, position)

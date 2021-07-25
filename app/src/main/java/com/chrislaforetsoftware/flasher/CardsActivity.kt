@@ -1,14 +1,15 @@
 package com.chrislaforetsoftware.flasher
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.InputType
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
-import android.widget.AdapterView.OnItemClickListener
 import com.chrislaforetsoftware.flasher.adapters.CardListArrayAdapter
 import com.chrislaforetsoftware.flasher.db.DatabaseHelper
 import com.chrislaforetsoftware.flasher.entities.Card
@@ -19,6 +20,7 @@ import java.util.*
 class CardsActivity() : AppCompatActivity() {
 
 	lateinit var deck: Deck;
+	var showFace = true
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -31,7 +33,6 @@ class CardsActivity() : AppCompatActivity() {
 		actionBar!!.title = deck.name
 		actionBar.subtitle = getString(R.string.activity_title_flashcard_list)
 		actionBar.setDisplayHomeAsUpEnabled(true)
-
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -49,6 +50,23 @@ class CardsActivity() : AppCompatActivity() {
 		return DatabaseHelper(this)
 	}
 
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		// Handle item selection
+		return when (item.itemId) {
+			R.id.flip_cards -> {
+				showFace = !showFace
+				showCards()
+				true
+			}
+			R.id.sort_order -> {
+				true			}
+			R.id.start_quiz -> {
+				true
+			}
+			else -> super.onOptionsItemSelected(item)
+		}
+	}
+
 	private fun showCards() {
 		// TODO flesh in the show cards/sorted and so on
 		val cardList: List<Card> = this.getDatabase().getCardsByDeckId(deck.id)
@@ -58,6 +76,7 @@ class CardsActivity() : AppCompatActivity() {
 			val adapter = CardListArrayAdapter(
 					this,
 					R.layout.card_listview,
+					showFace,
 					cardList
 			)
 			listView.adapter = adapter

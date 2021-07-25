@@ -95,7 +95,7 @@ class ImportActivity() : AppCompatActivity(), IDeckPickerListener {
             var targetDeck: Deck? = null
             if (isCreateNewDeck) {
                 targetDeck = Deck()
-                targetDeck.name = filename + "." + getDatabase().getDecks().size
+                targetDeck.name = filename.replace(".json", "") + "." + getDatabase().getDecks().size
                 getDatabase().createDeck(targetDeck)
             } else {
                 val deckName: String = destinationDeck.text as String

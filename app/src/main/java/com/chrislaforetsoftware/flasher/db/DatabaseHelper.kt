@@ -13,24 +13,24 @@ class DatabaseHelper(context: Context)
     : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
 
     companion object {
-        val DATABASE_NAME = "FlasherCard.db"
+        const val DATABASE_NAME = "FlasherCard.db"
 
-        val DECK_TABLE = "decks"
-        val DECK_ID = "ID"
-        val DECK_NAME = "NAME"
-        val DECK_CREATED = "Created"
-        val DECK_LASTUSE = "LastUsed"
+        const val DECK_TABLE = "decks"
+        const val DECK_ID = "ID"
+        const val DECK_NAME = "NAME"
+        const val DECK_CREATED = "Created"
+        const val DECK_LASTUSE = "LastUsed"
 
-        val CARD_TABLE = "cards"
-        val CARD_ID = "ID"
-        val CARD_DECK_ID = "DeckID"
-        val CARD_FACE = "Face"
-        val CARD_REVERSE = "Reverse"
-        val CARD_CREATED = "Created"
-        val CARD_QUIZZES = "TotalQuizzes"
-        val CARD_CORRECT = "TotalCorrect"
-        val CARD_MISSES = "TotalMisses"
-        val CARD_FLAGGED = "Flagged"
+        const val CARD_TABLE = "cards"
+        const val CARD_ID = "ID"
+        const val CARD_DECK_ID = "DeckID"
+        const val CARD_FACE = "Face"
+        const val CARD_REVERSE = "Reverse"
+        const val CARD_CREATED = "Created"
+        const val CARD_QUIZZES = "TotalQuizzes"
+        const val CARD_CORRECT = "TotalCorrect"
+        const val CARD_MISSES = "TotalMisses"
+        const val CARD_FLAGGED = "Flagged"
     }
 
     val db: SQLiteDatabase by lazy {

@@ -9,21 +9,21 @@ import java.util.*
 
 class DeckSerializer {
 	companion object {
-		fun serializeDeck(deck: Deck, cards: List<Card>): String {
+		fun serializeDeck(deck: Deck, cards: List<Card>, includeFlaggings: Boolean, includeStatistics: Boolean): String {
 			val cardList = mutableListOf<SerializedCard>()
 			for (card in cards) {
 				cardList.add(
 					SerializedCard(
 						card.face,
 						card.reverse,
-						card.quizzes,
-						card.correct,
-						card.misses,
-						card.flagged
+						if (includeStatistics) card.quizzes else 0,
+						if (includeStatistics) card.correct else 0,
+						if (includeStatistics) card.misses else 0,
+						if (includeFlaggings) card.flagged else false
 					)
 				)
 			}
-			val serializedDeck = SerializedDeck(deck.name, cardList.toTypedArray())
+			val serializedDeck = SerializedDeck(deck.name, includeFlaggings, includeStatistics, cardList.toTypedArray())
 			return Json.encodeToString(SerializedDeck.serializer(), serializedDeck)
 		}
 
@@ -56,7 +56,9 @@ class DeckSerializer {
 
 @Serializable
 private data class SerializedDeck(val name: String,
-						  val cards: Array<SerializedCard>) {
+								  val includesFlaggings: Boolean,
+								  val includesStatistics: Boolean,
+								  val cards: Array<SerializedCard>) {
 }
 
 

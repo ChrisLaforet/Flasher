@@ -130,9 +130,9 @@ class CardsActivity() : AppCompatActivity() {
 
 	private fun sortCards(cards: List<Card>): List<Card> {
 		if (sortAscending) {
-			return cards.sortedBy { if (showFace) it.face else it.reverse }
+			return cards.sortedBy { if (showFace) it.getFaceForSort() else it.getReverseForSort() }
 		}
-		return cards.sortedByDescending { if (showFace) it.face else it.reverse }
+		return cards.sortedByDescending { if (showFace) it.getFaceForSort() else it.getReverseForSort() }
 	}
 
 	fun onClickCreateCardActionButton(view: View) {

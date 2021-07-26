@@ -12,4 +12,12 @@ class Card: Serializable {
     var correct: Int = 0
     var misses: Int = 0
     var flagged: Boolean = false
+
+    fun getFaceForSort(): String {
+        return face.toLowerCase()
+    }
+
+    fun getReverseForSort(): String {
+        return reverse.toLowerCase()
+    }
 }

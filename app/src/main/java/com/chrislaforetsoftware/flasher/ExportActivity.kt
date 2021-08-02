@@ -85,6 +85,7 @@ class ExportActivity() : AppCompatActivity(), IDeckPickerListener {
 			Toast.makeText(baseContext,
 					"File exported successfully!",
 					Toast.LENGTH_SHORT).show()
+			finish()
 		} catch (e: Exception) {
 			e.printStackTrace()
 		}

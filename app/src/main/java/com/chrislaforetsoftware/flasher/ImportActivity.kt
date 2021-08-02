@@ -1,6 +1,7 @@
 package com.chrislaforetsoftware.flasher
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -15,6 +16,7 @@ import com.chrislaforetsoftware.flasher.pickers.DeckPicker
 import com.chrislaforetsoftware.flasher.pickers.FilePicker
 import com.chrislaforetsoftware.flasher.pickers.IDeckPickerListener
 import com.chrislaforetsoftware.flasher.serializers.DeckSerializer
+import java.io.File
 import java.io.FileInputStream
 import java.io.InputStreamReader
 
@@ -28,6 +30,9 @@ class ImportActivity() : AppCompatActivity(), IDeckPickerListener {
     private lateinit var importButton: Button
 
     private var isCreateNewDeck = false
+    private var sourceFileToImport: Uri? = null
+
+    private val SOURCE_FILE_SELECTED = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,12 +56,12 @@ class ImportActivity() : AppCompatActivity(), IDeckPickerListener {
     }
 
     fun selectFileToImportClick(view: View) {
+// TODO: remove FileSelection xml and class
 //        val intent = Intent(this, FileSelection::class.java);
 //        startActivityForResult(intent, 1)
 
         val intent = Intent(this, FilePicker::class.java)
-        startActivity(intent)
-
+        startActivityForResult(intent, SOURCE_FILE_SELECTED)
     }
 
     fun selectDeckClick(view: View) {
@@ -64,14 +69,12 @@ class ImportActivity() : AppCompatActivity(), IDeckPickerListener {
         picker.selectDeck()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK && data != null) {
-            val filename: String = data.getStringExtra("fileName") as String
-            if (filename.isNotEmpty()) {
-                fileToImport.text = filename
-                checkActivationForImportButton()
-            }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
+        super.onActivityResult(requestCode, resultCode, resultData)
+        if (resultCode == RESULT_OK && requestCode == SOURCE_FILE_SELECTED) {
+            sourceFileToImport = resultData!!.data
+            fileToImport.text = sourceFileToImport!!.lastPathSegment
+            checkActivationForImportButton()
         }
     }
 
@@ -112,10 +115,11 @@ class ImportActivity() : AppCompatActivity(), IDeckPickerListener {
                 return
             }
 
-            val inputFile: FileInputStream = openFileInput(filename)
-            val inputReader = InputStreamReader(inputFile)
+            val inputFile = File(sourceFileToImport!!.toString())
+            val inputFileStream: FileInputStream = FileInputStream(inputFile)
+            val inputReader = InputStreamReader(inputFileStream)
             val serializedContent: String = inputReader.readText()
-            inputFile.close()
+            inputFileStream.close()
 
             importFileToDeck(serializedContent, targetDeck)
         } catch (e: Exception) {
@@ -148,6 +152,7 @@ class ImportActivity() : AppCompatActivity(), IDeckPickerListener {
         Toast.makeText(baseContext,
                 "Deck ${targetDeck.name} has been imported from file!",
                 Toast.LENGTH_SHORT).show()
+        finish()
     }
 
     private fun saveNewCardAndAddToLookup(card: Card, targetDeck: Deck, cardFaces: MutableMap<String, Int>) {

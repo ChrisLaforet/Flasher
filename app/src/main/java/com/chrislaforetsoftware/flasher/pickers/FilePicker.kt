@@ -1,7 +1,10 @@
 package com.chrislaforetsoftware.flasher.pickers
 
 import android.Manifest
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.support.v4.content.ContextCompat
@@ -56,6 +59,16 @@ class FilePicker(): AppCompatActivity() {
             }
             currentPath = getCurrentDisplayPath()
             showCurrentPath(folder)
+        }
+
+        filesList.setOnItemClickListener { parent, view, position, id ->
+            val element = parent.getItemAtPosition(position) 	// The item that was clicked
+            val filename = element.toString()
+
+            val result = Intent()
+            result.data = Uri.parse(getCurrentPath(false) + File.separator + filename)
+            setResult(Activity.RESULT_OK, result)
+            finish()
         }
 
         rootPath = Environment.getExternalStorageDirectory()

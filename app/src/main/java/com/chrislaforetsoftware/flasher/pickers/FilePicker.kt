@@ -13,14 +13,14 @@ import com.chrislaforetsoftware.flasher.R
 import java.io.File
 import java.util.*
 
-private data class PathContainer(var basePath: File, var newPath: File) {}
+private data class PathHolder(var parentPath: File?, var currentPath: File) {}
 
 class FilePicker(): AppCompatActivity() {
 
     private lateinit var folderList: ListView
     private lateinit var filesList: ListView
 
-    private val stack: Deque<PathContainer> = ArrayDeque<PathContainer>()
+    private val pathStack: Deque<PathHolder> = ArrayDeque<PathHolder>()
     private lateinit var rootPath: File
     private var currentPath: String = File.separator
 
@@ -41,43 +41,48 @@ class FilePicker(): AppCompatActivity() {
         }
 
         folderList = this.findViewById(R.id.folderList)
+        filesList = this.findViewById(R.id.filesList)
+
         folderList.setOnItemClickListener { parent, view, position, id ->
             val element = parent.getItemAtPosition(position) 	// The item that was clicked
             val folderName = element.toString()
             var folder: File? = null
             if (folderName.startsWith(".. ")) {
-                val previousPath = stack.pop()
-                folder = previousPath.basePath
-                currentPath = getCurrentPath(true)
-                if (currentPath.isEmpty()) {
-                    currentPath = File.separator
-                }
+                val previousPath = pathStack.pop()
+                folder = previousPath.parentPath ?: rootPath
             } else {
                 folder = File(createNewPathFromCurrentPath(folderName))
-                stack.push(PathContainer(File(getCurrentPath()), folder))
-                currentPath = createNewPathFromCurrentPath(folderName, true)
+                pathStack.push(PathHolder(File(getCurrentPath()), folder))
             }
-            showCurrentPath(folder ?: rootPath)
+            currentPath = getCurrentDisplayPath()
+            showCurrentPath(folder)
         }
-        filesList = this.findViewById(R.id.filesList)
 
         rootPath = Environment.getExternalStorageDirectory()
+        pathStack.push(PathHolder(null, rootPath))
         showCurrentPath(rootPath)
+    }
+
+    private fun getCurrentDisplayPath(): String {
+        val displayPath = getCurrentPath(true)
+        if (displayPath.isNullOrEmpty()) {
+            return File.separator
+        }
+        return displayPath
     }
 
     private fun getCurrentPath(excludeRootPath: Boolean = false): String {
         val builder: StringBuilder = StringBuilder()
-        if (!excludeRootPath) {
-            builder.append(rootPath.absolutePath)
-        }
 
-        stack.toList().forEach {
-            if (it.basePath != rootPath) {
+        val paths = pathStack.toList()
+        paths.reversed().forEach {
+            if (it.parentPath != null) {
                 builder.append(File.separator)
-                builder.append(it.basePath.name)
+                builder.append(it.currentPath.name)
+            } else if (!excludeRootPath) {
+                builder.append(rootPath.absolutePath)
             }
         }
-
         return builder.toString()
     }
 
@@ -129,10 +134,11 @@ class FilePicker(): AppCompatActivity() {
     }
 
     private fun showFolders(folders: List<File>) {
-        val folderCount = if (stack.isEmpty()) folders.size else folders.size + 1
+        val showGoBackOption = pathStack.size > 1
+        val folderCount = if (showGoBackOption) folders.size + 1 else folders.size
         val listItems = arrayOfNulls<String>(folderCount)
         var offset = 0
-        if (stack.isNotEmpty()) {
+        if (showGoBackOption) {
             listItems[offset++] = "..  (" + this.getString(R.string.go_back) + ")"
         }
         folders.forEach {

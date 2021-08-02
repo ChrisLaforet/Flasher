@@ -37,4 +37,9 @@
     <string name="search_for_card">Search for card</string>
     <string name="filter_cards">Filter cards</string>
 
+    <string name="choose_file_prompt">Choose file</string>
+    <string name="folders_title">Folders</string>
+    <string name="files_title">Files</string>
+    <string name="go_back">Go back</string>
+
 </resources>

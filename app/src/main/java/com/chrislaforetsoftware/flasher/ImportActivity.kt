@@ -12,6 +12,7 @@ import com.chrislaforetsoftware.flasher.db.DatabaseHelper
 import com.chrislaforetsoftware.flasher.entities.Card
 import com.chrislaforetsoftware.flasher.entities.Deck
 import com.chrislaforetsoftware.flasher.pickers.DeckPicker
+import com.chrislaforetsoftware.flasher.pickers.FilePicker
 import com.chrislaforetsoftware.flasher.pickers.IDeckPickerListener
 import com.chrislaforetsoftware.flasher.serializers.DeckSerializer
 import java.io.FileInputStream
@@ -50,8 +51,12 @@ class ImportActivity() : AppCompatActivity(), IDeckPickerListener {
     }
 
     fun selectFileToImportClick(view: View) {
-        val intent = Intent(this, FileSelection::class.java);
-        startActivityForResult(intent, 1)
+//        val intent = Intent(this, FileSelection::class.java);
+//        startActivityForResult(intent, 1)
+
+        val intent = Intent(this, FilePicker::class.java)
+        startActivity(intent)
+
     }
 
     fun selectDeckClick(view: View) {

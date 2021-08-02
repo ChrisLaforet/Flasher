@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
 
 		val listView: ListView? = this.findViewById(R.id.deck_list)
 		if (listView != null) {
-			val adapter: ArrayAdapter<String> = ArrayAdapter(
+			val adapter: ArrayAdapter<String?> = ArrayAdapter(
 				this.applicationContext,
 				R.layout.deck_listview,
 				listItems

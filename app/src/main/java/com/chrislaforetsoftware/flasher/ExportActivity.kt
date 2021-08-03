@@ -1,6 +1,7 @@
 package com.chrislaforetsoftware.flasher
 
 import android.os.Bundle
+import android.os.Environment
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Button
@@ -11,14 +12,18 @@ import com.chrislaforetsoftware.flasher.db.DatabaseHelper
 import com.chrislaforetsoftware.flasher.entities.Card
 import com.chrislaforetsoftware.flasher.entities.Deck
 import com.chrislaforetsoftware.flasher.pickers.DeckPicker
+import com.chrislaforetsoftware.flasher.pickers.ExportFolderPicker
 import com.chrislaforetsoftware.flasher.pickers.IDeckPickerListener
+import com.chrislaforetsoftware.flasher.pickers.IExportFolderPickerListener
 import com.chrislaforetsoftware.flasher.serializers.DeckSerializer
+import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStreamWriter
 
 
-class ExportActivity() : AppCompatActivity(), IDeckPickerListener {
+class ExportActivity() : AppCompatActivity(), IDeckPickerListener, IExportFolderPickerListener {
 
+	private lateinit var folderForExport: TextView
 	private lateinit var sourceDeck: TextView
 	private lateinit var includeFlaggingCheckbox: CheckBox
 	private lateinit var includeStatisticsCheckbox: CheckBox
@@ -32,6 +37,7 @@ class ExportActivity() : AppCompatActivity(), IDeckPickerListener {
 		actionBar!!.title = this.getString(R.string.export_deck)
 		actionBar.setDisplayHomeAsUpEnabled(true)
 
+		folderForExport = this.findViewById(R.id.folderForExport)
 		sourceDeck = this.findViewById(R.id.sourceDeck)
 		includeFlaggingCheckbox = this.findViewById(R.id.includeFlaggingCheckbox)
 		includeStatisticsCheckbox = this.findViewById(R.id.includeStatisticsCheckbox)
@@ -41,6 +47,11 @@ class ExportActivity() : AppCompatActivity(), IDeckPickerListener {
 
 	private fun getDatabase(): DatabaseHelper {
 		return DatabaseHelper(this)
+	}
+
+	fun selectFileToImportClick(view: View) {
+		val picker = ExportFolderPicker(this, getString(R.string.folder_for_export_prompt), this)
+		picker.selectExportFolder()
 	}
 
 	fun selectDeckClick(view: View) {
@@ -54,7 +65,19 @@ class ExportActivity() : AppCompatActivity(), IDeckPickerListener {
 
 	override fun onDeckPicked(deckName: String) {
 		sourceDeck.text = deckName
-		exportButton.isEnabled = true
+		checkActivationForExportButton()
+	}
+
+	override fun onExportFolderPicked(exportFolderName: String) {
+		folderForExport.text = exportFolderName
+		checkActivationForExportButton()
+	}
+
+	private fun checkActivationForExportButton() {
+		if (folderForExport.text != getString(R.string.select_folder) &&
+				sourceDeck.text != getString(R.string.deck_prompt)) {
+			exportButton.isEnabled = true
+		}
 	}
 
 	fun exportDeckClick(view: View) {
@@ -72,10 +95,21 @@ class ExportActivity() : AppCompatActivity(), IDeckPickerListener {
 		}
 	}
 
+	private fun getFullExportFile(filename: String): File {
+		val folder = File(Environment.getExternalStorageDirectory().getAbsolutePath(), folderForExport.text as String)
+		if (!folder.exists()) {
+			folder.mkdirs()
+		}
+		return File(folder, filename)
+	}
+
 	private fun exportDeckToFile(deck: Deck, cards: List<Card>) {
-		val filePathName = "Flasher.${deck.id}.${deck.getDeckNameAsFilename()}.json"
+		val filename = "Flasher.${deck.id}.${deck.getDeckNameAsFilename()}.json"
 		try {
-			val outputFile: FileOutputStream = openFileOutput(filePathName, MODE_PRIVATE)
+//val outputFile: FileOutputStream = openFileOutput(fullPathname, MODE_PRIVATE)
+			val file = getFullExportFile(filename)
+			file.createNewFile()
+			val outputFile = FileOutputStream(file)
 			val outputWriter = OutputStreamWriter(outputFile)
 
 			val serialized = DeckSerializer.serializeDeck(deck, cards, includeFlaggingCheckbox.isChecked, includeStatisticsCheckbox.isChecked)
@@ -83,11 +117,14 @@ class ExportActivity() : AppCompatActivity(), IDeckPickerListener {
 
 			outputWriter.close()
 			Toast.makeText(baseContext,
-					"File exported successfully!",
+					"File exported successfully to " + filename + "!",
 					Toast.LENGTH_SHORT).show()
-			finish()
 		} catch (e: Exception) {
+			Toast.makeText(baseContext,
+					"Error while exporting file (" + e.message + ").",
+					Toast.LENGTH_SHORT).show()
 			e.printStackTrace()
 		}
+		finish()
 	}
 }

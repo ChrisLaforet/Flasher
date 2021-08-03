@@ -16,6 +16,33 @@
             app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
+                android:text="Select folder to export into"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/exportFolderTitle"
+                android:textSize="18sp"
+                android:paddingTop="12sp"
+                android:paddingStart="5dp"
+                android:paddingBottom="12sp" />
+
+        <TextView
+                android:text="@string/select_folder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="5dp"
+                android:paddingBottom="12sp"
+                android:id="@+id/folderForExport"
+                android:onClick="selectFileToImportClick" />
+
+        <View
+                android:id="@+id/divider0"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"
+                android:paddingTop="12sp"
+                android:paddingBottom="6sp" />
+
+        <TextView
                 android:text="@string/deck_to_export"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -35,7 +62,7 @@
                 android:onClick="selectDeckClick" />
 
         <View
-                android:id="@+id/divider0"
+                android:id="@+id/divider1"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="?android:attr/listDivider"

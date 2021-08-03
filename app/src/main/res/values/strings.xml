@@ -17,10 +17,12 @@
     <string name="alert_title_error_saving_deck">Error while saving deck</string>
 
     <string name="file_to_import_prompt">Select file to import</string>
+    <string name="folder_for_export_prompt">Select folder for export</string>
     <string name="deck_to_export_prompt">Select deck to export</string>
     <string name="destination_deck_prompt">Select deck to import to</string>
     <string name="create_new_deck">Create new deck</string>
     <string name="import_to_deck">Import to deck</string>
+    <string name="select_folder">Select folder...</string>
     <string name="deck_to_export">Deck to export</string>
     <string name="file_prompt">Select file…</string>
     <string name="deck_prompt">Select deck…</string>

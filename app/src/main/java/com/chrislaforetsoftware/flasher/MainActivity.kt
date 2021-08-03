@@ -1,12 +1,15 @@
 package com.chrislaforetsoftware.flasher
 
+import android.Manifest
 import android.app.AlertDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
+import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.text.InputType
 import android.view.Menu
@@ -20,6 +23,7 @@ import com.chrislaforetsoftware.flasher.db.DatabaseHelper
 import com.chrislaforetsoftware.flasher.entities.Deck
 import com.chrislaforetsoftware.flasher.types.StringDate
 import java.util.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -53,14 +57,24 @@ class MainActivity : AppCompatActivity() {
 		showDecks()
 	}
 
+	// Storage Permissions
+	private val REQUEST_EXTERNAL_STORAGE = 1
+	private val PERMISSIONS_STORAGE = arrayOf(
+			Manifest.permission.READ_EXTERNAL_STORAGE,
+			Manifest.permission.WRITE_EXTERNAL_STORAGE
+	)
+
 	private fun requestExternalStorageManagementPermissions() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
 				!Environment.isExternalStorageManager()) {
 			val uri = Uri.parse("package:${BuildConfig.APPLICATION_ID}")
 
-			startActivity(Intent(
-							Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
-							uri))
+			startActivity(Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri))
+		} else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+			val permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+			if (permission != PackageManager.PERMISSION_GRANTED) {
+				ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE)
+			}
 		}
 	}
 

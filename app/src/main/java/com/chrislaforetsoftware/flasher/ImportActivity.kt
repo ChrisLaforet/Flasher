@@ -123,7 +123,11 @@ class ImportActivity() : AppCompatActivity(), IDeckPickerListener {
 
             importFileToDeck(serializedContent, targetDeck)
         } catch (e: Exception) {
+            Toast.makeText(baseContext,
+                    "Error while importing file (" + e.message + ").",
+                    Toast.LENGTH_SHORT).show()
             e.printStackTrace()
+            finish()
         }
     }
 

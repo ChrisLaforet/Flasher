@@ -106,7 +106,6 @@ class ExportActivity() : AppCompatActivity(), IDeckPickerListener, IExportFolder
 	private fun exportDeckToFile(deck: Deck, cards: List<Card>) {
 		val filename = "Flasher.${deck.id}.${deck.getDeckNameAsFilename()}.json"
 		try {
-//val outputFile: FileOutputStream = openFileOutput(fullPathname, MODE_PRIVATE)
 			val file = getFullExportFile(filename)
 			file.createNewFile()
 			val outputFile = FileOutputStream(file)

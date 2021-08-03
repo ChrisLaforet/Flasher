@@ -39,7 +39,7 @@ class DeckPicker(private val context: Context,
 		deckSelectionBox.setSingleChoiceItems(names.toTypedArray(), 0) { dialogInterface: DialogInterface, item: Int -> selectedItem = item }
 
 		deckSelectionBox.setPositiveButton(context.getString(R.string.OK)) { dialog, which ->
-			if (selectedItem == 0) {
+			if (selectedItem == 0 && createDeckOptionAllowed) {
 				listener.onCreateDeckPicked()
 			} else {
 				listener.onDeckPicked(names[selectedItem])

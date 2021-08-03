@@ -1,0 +1,17 @@
+package com.chrislaforetsoftware.flasher
+
+const val DECK_EXTRA = "DECK"
+
+const val QUIZ_LANGUAGES_EXTRA = "QUIZ_LANGUAGES"
+const val IS_LEARNING_LANGUAGE = "IS_LEARNING_LANGUAGE"
+const val IS_NATIVE_LANGUAGE = "IS_NATIVE_LANGUAGE"
+const val IS_BOTH_LANGUAGES = "IS_BOTH_LANGUAGES"
+
+const val QUIZ_LIMIT_EXTRA = "QUIZ_LIMIT"
+const val IS_FLAGGED_ONLY = "IS_FLAGGED_ONLY"
+const val IS_NEW_ONLY = "IS_NEW_ONLY"
+const val IS_FAILED_ONLY = "IS_FAILED_ONLY"
+
+const val SOURCE_FILE_SELECTED = 1
+
+const val REQUEST_EXTERNAL_STORAGE = 1

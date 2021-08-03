@@ -51,5 +51,14 @@
     <string name="clear_button_title">Clear</string>
     <string name="start_quiz_prompt">Start a Quiz</string>
     <string name="start_quiz_button">Start quiz</string>
+    <string name="end_quiz_button">End Quiz</string>
+    <string name="flashcard_quiz_title">Flashcard quiz</string>
+
+    <string name="not_permitted_to_read_files">Not permitted to read files</string>
+    <string name="backups_folder_name">Backups</string>
+    <string name="documents_folder_name">Documents</string>
+    <string name="download_folder_name">Download</string>
+    <string name="temp_folder_name">Temp</string>
+	<string name="no_cards_for_quiz_message">There are no cards found to use in this quiz!</string>
 
 </resources>

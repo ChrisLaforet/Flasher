@@ -27,10 +27,10 @@ class ExportFolderPicker(private val context: Context,
 		layout.orientation = LinearLayout.VERTICAL
 
 		var names = mutableListOf<String>()
-		names.add("Backups")
-		names.add("Documents")
-		names.add("Download")
-		names.add("Temp")
+		names.add(context.getString(R.string.backups_folder_name))
+		names.add(context.getString(R.string.documents_folder_name))
+		names.add(context.getString(R.string.download_folder_name))
+		names.add(context.getString(R.string.temp_folder_name))
 		var selectedItem: Int = 0
 		exportFolderSelectionBox.setSingleChoiceItems(names.toTypedArray(), 0) { dialogInterface: DialogInterface, item: Int -> selectedItem = item }
 

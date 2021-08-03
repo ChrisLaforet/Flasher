@@ -14,18 +14,15 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/Theme.Flasher">
-        <activity android:name=".QuizActivity"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".CardsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.CARDS" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
@@ -36,7 +33,6 @@
         <activity android:name=".ExportActivity">
             <intent-filter>
                 <action android:name="android.intent.action.EXPORT" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
@@ -47,7 +43,6 @@
         <activity android:name=".ImportActivity">
             <intent-filter>
                 <action android:name="android.intent.action.IMPORT" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
@@ -59,6 +54,11 @@
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value=".ImportActivity" />
+        </activity>
+        <activity android:name=".QuizActivity">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".CardsActivity" />
         </activity>
     </application>
 

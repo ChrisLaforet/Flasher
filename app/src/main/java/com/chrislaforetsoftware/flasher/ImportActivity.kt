@@ -32,8 +32,6 @@ class ImportActivity() : AppCompatActivity(), IDeckPickerListener {
     private var isCreateNewDeck = false
     private var sourceFileToImport: Uri? = null
 
-    private val SOURCE_FILE_SELECTED = 1
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_import)
@@ -56,10 +54,6 @@ class ImportActivity() : AppCompatActivity(), IDeckPickerListener {
     }
 
     fun selectFileToImportClick(view: View) {
-// TODO: remove FileSelection xml and class
-//        val intent = Intent(this, FileSelection::class.java);
-//        startActivityForResult(intent, 1)
-
         val intent = Intent(this, FilePicker::class.java)
         startActivityForResult(intent, SOURCE_FILE_SELECTED)
     }

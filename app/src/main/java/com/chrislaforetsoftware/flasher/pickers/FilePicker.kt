@@ -38,7 +38,7 @@ class FilePicker(): AppCompatActivity() {
 
         if (!setupPermissions()) {
             Toast.makeText(baseContext,
-                    "Not permitted to read files",
+                    getString(R.string.not_permitted_to_read_files),
                     Toast.LENGTH_SHORT).show()
             finish()
             return
@@ -79,7 +79,7 @@ class FilePicker(): AppCompatActivity() {
 
     private fun getCurrentDisplayPath(): String {
         val displayPath = getCurrentPath(true)
-        if (displayPath.isNullOrEmpty()) {
+        if (displayPath.isEmpty()) {
             return File.separator
         }
         return displayPath

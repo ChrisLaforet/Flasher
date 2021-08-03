@@ -3,6 +3,7 @@ package com.chrislaforetsoftware.flasher
 import android.R.id.message
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
@@ -19,10 +20,9 @@ import com.chrislaforetsoftware.flasher.entities.Deck
 import com.chrislaforetsoftware.flasher.types.StringDate
 import java.util.*
 
-
 class CardsActivity() : AppCompatActivity() {
 
-	lateinit var deck: Deck;
+	private lateinit var deck: Deck
 	private lateinit var activeFilterNotification: TextView
 
 	var showFace = true
@@ -34,7 +34,7 @@ class CardsActivity() : AppCompatActivity() {
 		setContentView(R.layout.activity_cards)
 
 		val extras = intent.extras
-		this.deck = extras!!.getSerializable("deck") as Deck
+		this.deck = extras!!.getSerializable(DECK_EXTRA) as Deck
 
 		val actionBar = supportActionBar
 		actionBar!!.title = deck.name
@@ -118,7 +118,27 @@ class CardsActivity() : AppCompatActivity() {
 	}
 
 	private fun startQuiz(isLearning: Boolean, isNative: Boolean, isFlaggedOnly: Boolean, isNewOnly: Boolean, isFailedOnly: Boolean) {
-
+		val intent = Intent(this, QuizActivity::class.java)
+		intent.putExtra(DECK_EXTRA, deck)
+		if (isLearning && isNative) {
+			intent.putExtra(QUIZ_LANGUAGES_EXTRA, IS_BOTH_LANGUAGES)
+		} else if (isNative) {
+			intent.putExtra(QUIZ_LANGUAGES_EXTRA, IS_NATIVE_LANGUAGE)
+		} else {
+			intent.putExtra(QUIZ_LANGUAGES_EXTRA, IS_LEARNING_LANGUAGE)
+		}
+		when {
+			isFlaggedOnly -> {
+				intent.putExtra(QUIZ_LIMIT_EXTRA, IS_FLAGGED_ONLY)
+			}
+			isNewOnly -> {
+				intent.putExtra(QUIZ_LIMIT_EXTRA, IS_NEW_ONLY)
+			}
+			isFailedOnly -> {
+				intent.putExtra(QUIZ_LIMIT_EXTRA, IS_FAILED_ONLY)
+			}
+		}
+		startActivity(intent)
 	}
 
 	private fun showCards() {

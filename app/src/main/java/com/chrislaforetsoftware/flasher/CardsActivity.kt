@@ -77,6 +77,7 @@ class CardsActivity() : AppCompatActivity() {
 				true
 			}
 			R.id.start_quiz -> {
+				promptForQuiz()
 				true
 			}
 			else -> super.onOptionsItemSelected(item)
@@ -87,18 +88,37 @@ class CardsActivity() : AppCompatActivity() {
 		val filterFor: EditText = EditText(this)
 		filterFor.isSingleLine = true
 		AlertDialog.Builder(this)
-				.setTitle("Filter cards for partial word, word, or phrase")
+				.setTitle(getString(R.string.filter_prompt_title))
 				.setView(filterFor)
-				.setPositiveButton("Filter", DialogInterface.OnClickListener { dialog, whichButton ->
+				.setPositiveButton(getString(R.string.filter_button_text), DialogInterface.OnClickListener { dialog, whichButton ->
 					if (filterFor.text.isNotEmpty()) {
 						filterOn = filterFor.text.toString()
 					}
 					showCards()
 				})
-				.setNegativeButton("Clear", DialogInterface.OnClickListener { dialog, whichButton ->
+				.setNegativeButton(getString(R.string.clear_button_title), DialogInterface.OnClickListener { dialog, whichButton ->
 					filterOn = ""
 					showCards()
 				}).show()
+	}
+
+	private fun promptForQuiz() {
+		val choices = arrayOf("Learning language", "My native language", "Flagged cards only", "New cards only", "Failed cards only")
+		val checkedChoices = booleanArrayOf(true, false, false, false, false)
+		AlertDialog.Builder(this)
+				.setTitle(getString(R.string.start_quiz_prompt))
+				.setMultiChoiceItems(choices, checkedChoices) { dialog, which, isChecked ->
+					checkedChoices[which] = isChecked
+				}
+				.setPositiveButton(getString(R.string.start_quiz_button), DialogInterface.OnClickListener { dialog, whichButton ->
+					startQuiz(checkedChoices[0], checkedChoices[1], checkedChoices[2], checkedChoices[3], checkedChoices[4])
+				})
+				.setNegativeButton(getString(R.string.clear_button_title), DialogInterface.OnClickListener { dialog, whichButton ->
+				}).show()
+	}
+
+	private fun startQuiz(isLearning: Boolean, isNative: Boolean, isFlaggedOnly: Boolean, isNewOnly: Boolean, isFailedOnly: Boolean) {
+
 	}
 
 	private fun showCards() {

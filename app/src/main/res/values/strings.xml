@@ -44,4 +44,12 @@
     <string name="files_title">Files</string>
     <string name="go_back">Go back</string>
 
+	<string name="add_flashcard_button">Add flashcard</string>
+    <string name="add_deck_button">Add deck</string>
+	<string name="filter_prompt_title">Filter cards for partial word, word, or phrase</string>
+    <string name="filter_button_text">Filter</string>
+    <string name="clear_button_title">Clear</string>
+    <string name="start_quiz_prompt">Start a Quiz</string>
+    <string name="start_quiz_button">Start quiz</string>
+
 </resources>

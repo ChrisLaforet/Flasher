@@ -5,20 +5,24 @@
 			android:id="@+id/flip_cards"
 			android:icon="@android:drawable/stat_notify_sync"
 			android:title="@string/flip_cards"
+			android:tooltipText="@string/flip_cards"
 			app:showAsAction="always" />
 	<item
 			android:id="@+id/sort_order"
 			android:icon="@android:drawable/ic_menu_sort_alphabetically"
 			android:title="@string/sort_view"
+			android:tooltipText="@string/sort_view"
 			app:showAsAction="always" />
 	<item
 			android:id="@+id/filter_card"
 			android:icon="@android:drawable/ic_menu_search"
 			android:title="@string/filter_cards"
+			android:tooltipText="@string/filter_cards"
 			app:showAsAction="ifRoom" />
 	<item
 			android:id="@+id/start_quiz"
 			android:icon="@android:drawable/checkbox_on_background"
 			android:title="@string/start_quiz"
+			android:tooltipText="@string/start_quiz"
 			app:showAsAction="ifRoom" />
 </menu>

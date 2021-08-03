@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.support.v4.content.ContextCompat
@@ -108,6 +109,10 @@ class FilePicker(): AppCompatActivity() {
     }
 
     private fun setupPermissions(): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+                    !Environment.isExternalStorageManager()) {
+            return false
+        }
         val permission = ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)

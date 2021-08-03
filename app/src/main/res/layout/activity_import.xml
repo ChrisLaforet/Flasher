@@ -22,12 +22,14 @@
             android:id="@+id/importFileTitle"
             android:textSize="18sp"
             android:paddingTop="12sp"
+            android:paddingStart="5dp"
             android:paddingBottom="12sp" />
 
         <TextView
             android:text="@string/file_prompt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingStart="5dp"
             android:paddingBottom="12sp"
             android:id="@+id/fileToImport"
             android:onClick="selectFileToImportClick" />
@@ -47,12 +49,14 @@
                 android:id="@+id/deckTitle"
                 android:textSize="18sp"
                 android:paddingTop="12sp"
+                android:paddingStart="5dp"
                 android:paddingBottom="12sp" />
 
         <TextView
                 android:text="@string/deck_prompt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingStart="5dp"
                 android:paddingBottom="12sp"
                 android:id="@+id/destinationDeck"
                 android:onClick="selectDeckClick" />
@@ -76,6 +80,7 @@
                 android:id="@+id/overwriteExistingTitle"
                 android:textSize="18sp"
                 android:paddingTop="6sp"
+                android:paddingStart="5dp"
                 android:paddingBottom="12sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/overwriteExistingCheckbox"
@@ -105,6 +110,7 @@
                     android:id="@+id/flaggingTitle"
                     android:textSize="18sp"
                     android:paddingTop="6sp"
+                    android:paddingStart="5dp"
                     android:paddingBottom="12sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/includeFlaggingCheckbox"
@@ -134,6 +140,7 @@
                     android:id="@+id/statisticsTitle"
                     android:textSize="18sp"
                     android:paddingTop="6sp"
+                    android:paddingStart="5dp"
                     android:paddingBottom="12sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/includeStatisticsCheckbox"
@@ -168,5 +175,4 @@
                 android:text="@string/import_deck" />
 
     </LinearLayout>
-
 </android.support.constraint.ConstraintLayout>

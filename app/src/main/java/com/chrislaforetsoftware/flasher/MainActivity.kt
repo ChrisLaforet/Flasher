@@ -2,7 +2,11 @@ package com.chrislaforetsoftware.flasher
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.Settings
 import android.support.v7.app.AppCompatActivity
 import android.text.InputType
 import android.view.Menu
@@ -34,6 +38,8 @@ class MainActivity : AppCompatActivity() {
 			intent.putExtra("deck", deck)
 			startActivity(intent)
 		}
+
+		requestExternalStorageManagementPermissions()
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -45,6 +51,17 @@ class MainActivity : AppCompatActivity() {
 	override fun onResume() {
 		super.onResume()
 		showDecks()
+	}
+
+	private fun requestExternalStorageManagementPermissions() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+				!Environment.isExternalStorageManager()) {
+			val uri = Uri.parse("package:${BuildConfig.APPLICATION_ID}")
+
+			startActivity(Intent(
+							Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+							uri))
+		}
 	}
 
 	private fun getDatabase(): DatabaseHelper {

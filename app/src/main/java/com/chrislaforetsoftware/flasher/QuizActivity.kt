@@ -1,9 +1,9 @@
 package com.chrislaforetsoftware.flasher
 
 import android.graphics.drawable.Drawable
-import android.media.Image
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
@@ -13,6 +13,7 @@ import com.chrislaforetsoftware.flasher.db.DatabaseHelper
 import com.chrislaforetsoftware.flasher.entities.Card
 import com.chrislaforetsoftware.flasher.entities.Deck
 import kotlin.random.Random
+
 
 class QuizActivity : AppCompatActivity() {
 
@@ -39,7 +40,7 @@ class QuizActivity : AppCompatActivity() {
 
 		val actionBar = supportActionBar
 		actionBar!!.title = getString(R.string.flashcard_quiz_title)
-		// actionBar.setDisplayHomeAsUpEnabled(true) 		// TODO - cannot just go back to Cards without setting the DECK extra!!
+		actionBar.setDisplayHomeAsUpEnabled(false) 		// TODO - cannot just go back to Cards without setting the DECK extra!!  See https://stackoverflow.com/questions/14545139/android-back-button-in-the-title-bar (onOptionsItemSelected)
 
 		val extras = intent.extras
 		this.deck = extras!!.getSerializable(DECK_EXTRA) as Deck
@@ -66,7 +67,6 @@ class QuizActivity : AppCompatActivity() {
 		}
 		var nextCardIndex = 0
 		var card = cards[nextCardIndex++]
-		showCard(card)
 
 		val endQuizButton: Button = this.findViewById(R.id.end_quiz_button)
 		endQuizButton.setOnClickListener {
@@ -89,7 +89,7 @@ class QuizActivity : AppCompatActivity() {
 		goodButton.setOnClickListener {
 			markGood(card)
 			if (nextCardIndex >= cards.size) {
-				finish()
+				promptAndFinish()
 			} else {
 				card = cards[nextCardIndex++]
 				showCard(card)
@@ -100,7 +100,7 @@ class QuizActivity : AppCompatActivity() {
 		failButton.setOnClickListener {
 			markFail(card)
 			if (nextCardIndex >= cards.size) {
-				finish()
+				promptAndFinish()
 			} else {
 				card = cards[nextCardIndex++]
 				showCard(card)
@@ -109,8 +109,9 @@ class QuizActivity : AppCompatActivity() {
 
 		val editButton: ImageButton = this.findViewById(R.id.button_edit)
 		editButton.setOnClickListener {
-
 		}
+
+		showCard(card)
 	}
 
 	private fun showCard(card: Card) {
@@ -137,6 +138,7 @@ class QuizActivity : AppCompatActivity() {
 	private fun markGood(card: Card) {
 		card.correct++
 		getDatabase().updateCard(card)
+		promptCardPeek()
 	}
 
 	private fun setFlagging(card: Card) {
@@ -148,6 +150,38 @@ class QuizActivity : AppCompatActivity() {
 	private fun markFail(card: Card) {
 		card.misses++
 		getDatabase().updateCard(card)
+		promptCardPeek()
+	}
+
+	private fun promptCardPeek() {
+		if (cardReverse.visibility == View.INVISIBLE) {
+
+			val toast = Toast.makeText(this, cardReverse.text, Toast.LENGTH_LONG)
+
+			// Set the countdown to display the toast
+			val toastCountDown: CountDownTimer
+			toastCountDown =
+				object : CountDownTimer(PROMPT_PEEK_SLEEP_MSEC, 250) {
+					override fun onTick(millisUntilFinished: Long) {
+						toast.show()
+					}
+
+					override fun onFinish() {
+						toast.cancel()
+					}
+				}
+
+			// Show the toast and starts the countdown
+			toast.show()
+			toastCountDown.start()
+		}
+	}
+
+	private fun promptAndFinish() {
+		Toast.makeText(baseContext,
+			getString(R.string.no_more_cards_in_quiz_prompt),
+			Toast.LENGTH_SHORT).show()
+		finish()
 	}
 
 	private fun getDatabase(): DatabaseHelper {

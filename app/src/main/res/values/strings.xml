@@ -67,5 +67,6 @@
     <string name="edit_card">Edit card</string>
     <string name="learning_language_prompt">Learning language</string>
     <string name="native_language_prompt">Native language</string>
+    <string name="no_more_cards_in_quiz_prompt">No more cards in quiz</string>
 
 </resources>

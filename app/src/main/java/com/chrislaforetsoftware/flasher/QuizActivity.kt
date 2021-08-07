@@ -1,5 +1,6 @@
 package com.chrislaforetsoftware.flasher
 
+import android.graphics.drawable.Drawable
 import android.media.Image
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -29,6 +30,8 @@ class QuizActivity : AppCompatActivity() {
 	private lateinit var learningLanguagePrompt: String
 	private lateinit var nativeLanguagePrompt: String
 
+	private lateinit var clearFlagImage: Drawable
+	private lateinit var redFlagImage: Drawable
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -49,7 +52,6 @@ class QuizActivity : AppCompatActivity() {
 		cardLanguagePrompt = this.findViewById(R.id.card_language_prompt)
 		cardGoodPrompt = this.findViewById(R.id.card_good_prompt)
 		cardFailedPrompt = this.findViewById(R.id.card_failed_prompt)
-		cardFlaggingButton = this.findViewById(R.id.card_flagging_button)
 
 		learningLanguagePrompt = getString(R.string.learning_language_prompt)
 		nativeLanguagePrompt = getString(R.string.native_language_prompt)
@@ -69,6 +71,13 @@ class QuizActivity : AppCompatActivity() {
 		val endQuizButton: Button = this.findViewById(R.id.end_quiz_button)
 		endQuizButton.setOnClickListener {
 			finish()
+		}
+
+		clearFlagImage = getDrawable(R.drawable.clearflag) as Drawable
+		redFlagImage = getDrawable(R.drawable.redflag) as Drawable
+		cardFlaggingButton = this.findViewById(R.id.card_flagging_button)
+		cardFlaggingButton.setOnClickListener {
+			setFlagging(card)
 		}
 
 		val peekButton: ImageButton = this.findViewById(R.id.button_peek)
@@ -121,11 +130,19 @@ class QuizActivity : AppCompatActivity() {
 		}
 		cardGoodPrompt.text = card.correct.toString()
 		cardFailedPrompt.text = card.misses.toString()
+
+		cardFlaggingButton.setImageDrawable(if (card.flagged) redFlagImage else clearFlagImage)
 	}
 
 	private fun markGood(card: Card) {
 		card.correct++
 		getDatabase().updateCard(card)
+	}
+
+	private fun setFlagging(card: Card) {
+		card.flagged = !card.flagged
+		getDatabase().updateCard(card)
+		cardFlaggingButton.setImageDrawable(if (card.flagged) redFlagImage else clearFlagImage)
 	}
 
 	private fun markFail(card: Card) {

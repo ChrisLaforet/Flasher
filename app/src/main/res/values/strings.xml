@@ -22,7 +22,7 @@
     <string name="destination_deck_prompt">Select deck to import to</string>
     <string name="create_new_deck">Create new deck</string>
     <string name="import_to_deck">Import to deck</string>
-    <string name="select_folder">Select folder...</string>
+    <string name="select_folder">Select folder…</string>
     <string name="deck_to_export">Deck to export</string>
     <string name="file_prompt">Select file…</string>
     <string name="deck_prompt">Select deck…</string>
@@ -60,5 +60,12 @@
     <string name="download_folder_name">Download</string>
     <string name="temp_folder_name">Temp</string>
 	<string name="no_cards_for_quiz_message">There are no cards found to use in this quiz!</string>
+    <string name="toggle_flag_for_card">Toggle flag for card</string>
+    <string name="peek_at_answer">Peek at answer</string>
+    <string name="i_know_this">I know this</string>
+    <string name="i_don_t_know_this">I don\'t know this</string>
+    <string name="edit_card">Edit card</string>
+    <string name="learning_language_prompt">Learning language</string>
+    <string name="native_language_prompt">Native language</string>
 
 </resources>

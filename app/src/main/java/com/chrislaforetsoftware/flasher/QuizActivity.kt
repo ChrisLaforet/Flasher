@@ -1,9 +1,11 @@
 package com.chrislaforetsoftware.flasher
 
+import android.media.Image
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import com.chrislaforetsoftware.flasher.db.DatabaseHelper
@@ -18,7 +20,15 @@ class QuizActivity : AppCompatActivity() {
 	private lateinit var cardFront: TextView
 	private lateinit var cardReverse: TextView
 
+	private lateinit var cardLanguagePrompt: TextView
+	private lateinit var cardGoodPrompt: TextView
+	private lateinit var cardFailedPrompt: TextView
+	private lateinit var cardFlaggingButton: ImageButton
+
 	private lateinit var quizLanguage: String
+	private lateinit var learningLanguagePrompt: String
+	private lateinit var nativeLanguagePrompt: String
+
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -35,6 +45,14 @@ class QuizActivity : AppCompatActivity() {
 
 		cardFront = this.findViewById(R.id.card_front)
 		cardReverse = this.findViewById(R.id.card_reverse)
+
+		cardLanguagePrompt = this.findViewById(R.id.card_language_prompt)
+		cardGoodPrompt = this.findViewById(R.id.card_good_prompt)
+		cardFailedPrompt = this.findViewById(R.id.card_failed_prompt)
+		cardFlaggingButton = this.findViewById(R.id.card_flagging_button)
+
+		learningLanguagePrompt = getString(R.string.learning_language_prompt)
+		nativeLanguagePrompt = getString(R.string.native_language_prompt)
 
 		val cards: List<Card> = loadCards(quizLimit)
 		if (cards.isEmpty()) {
@@ -53,12 +71,12 @@ class QuizActivity : AppCompatActivity() {
 			finish()
 		}
 
-		val peekButton: Button = this.findViewById(R.id.button_peek)
+		val peekButton: ImageButton = this.findViewById(R.id.button_peek)
 		peekButton.setOnClickListener {
 			cardReverse.visibility = if (cardReverse.visibility == View.INVISIBLE) View.VISIBLE else View.INVISIBLE
 		}
 
-		val goodButton: Button = this.findViewById(R.id.button_good)
+		val goodButton: ImageButton = this.findViewById(R.id.button_good)
 		goodButton.setOnClickListener {
 			markGood(card)
 			if (nextCardIndex >= cards.size) {
@@ -69,7 +87,7 @@ class QuizActivity : AppCompatActivity() {
 			}
 		}
 
-		val failButton: Button = this.findViewById(R.id.button_fail)
+		val failButton: ImageButton = this.findViewById(R.id.button_fail)
 		failButton.setOnClickListener {
 			markFail(card)
 			if (nextCardIndex >= cards.size) {
@@ -80,7 +98,7 @@ class QuizActivity : AppCompatActivity() {
 			}
 		}
 
-		val editButton: Button = this.findViewById(R.id.button_edit)
+		val editButton: ImageButton = this.findViewById(R.id.button_edit)
 		editButton.setOnClickListener {
 
 		}
@@ -95,10 +113,14 @@ class QuizActivity : AppCompatActivity() {
 		if (showLanguage == IS_LEARNING_LANGUAGE) {
 			cardFront.text = card.face
 			cardReverse.text = card.reverse
+			cardLanguagePrompt.text = learningLanguagePrompt
 		} else {
 			cardFront.text = card.reverse
 			cardReverse.text = card.face
+			cardLanguagePrompt.text = nativeLanguagePrompt
 		}
+		cardGoodPrompt.text = card.correct.toString()
+		cardFailedPrompt.text = card.misses.toString()
 	}
 
 	private fun markGood(card: Card) {

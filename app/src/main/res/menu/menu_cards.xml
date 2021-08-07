@@ -14,15 +14,15 @@
 			android:tooltipText="@string/sort_view"
 			app:showAsAction="always" />
 	<item
-			android:id="@+id/filter_card"
-			android:icon="@android:drawable/ic_menu_search"
-			android:title="@string/filter_cards"
-			android:tooltipText="@string/filter_cards"
-			app:showAsAction="ifRoom" />
+		android:id="@+id/filter_card"
+		android:icon="@drawable/filter"
+		android:title="@string/filter_cards"
+		android:tooltipText="@string/filter_cards"
+		app:showAsAction="ifRoom" />
 	<item
-			android:id="@+id/start_quiz"
-			android:icon="@android:drawable/checkbox_on_background"
-			android:title="@string/start_quiz"
-			android:tooltipText="@string/start_quiz"
-			app:showAsAction="ifRoom" />
+		android:id="@+id/start_quiz"
+		android:icon="@drawable/quiz"
+		android:title="@string/start_quiz"
+		android:tooltipText="@string/start_quiz"
+		app:showAsAction="ifRoom" />
 </menu>

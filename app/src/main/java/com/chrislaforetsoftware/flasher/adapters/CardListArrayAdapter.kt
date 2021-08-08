@@ -1,13 +1,11 @@
 package com.chrislaforetsoftware.flasher.adapters
 
 import android.app.Activity
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.TextView
+import android.widget.*
 import com.chrislaforetsoftware.flasher.R
 import com.chrislaforetsoftware.flasher.entities.Card
 
@@ -35,9 +33,12 @@ class CardListArrayAdapter(
 
             viewHolder = ViewHolder()
             viewHolder.cardFace = rowView!!.findViewById<View>(R.id.card_face) as TextView
-            viewHolder.flagged = rowView.findViewById<View>(R.id.card_flagged) as CheckBox
-            viewHolder.editButton = rowView.findViewById<View>(R.id.card_edit) as Button
-            viewHolder.deleteButton = rowView.findViewById<View>(R.id.card_delete) as Button
+            viewHolder.flagged = rowView.findViewById<View>(R.id.card_flagged) as ImageView
+            viewHolder.editButton = rowView.findViewById<View>(R.id.card_edit) as ImageView
+            viewHolder.deleteButton = rowView.findViewById<View>(R.id.card_delete) as ImageView
+
+            viewHolder.clearFlagImage = rowView.context.getDrawable(R.drawable.clearflag) as Drawable
+            viewHolder.redFlagImage = rowView.context.getDrawable(R.drawable.redflag) as Drawable
 
             rowView.setTag(viewHolder)
         } else {
@@ -47,7 +48,7 @@ class CardListArrayAdapter(
         val textForCard: String = if (showFace) card.face else card.reverse
         viewHolder.cardFace?.text = textForCard
 
-        viewHolder.flagged?.isChecked = card.flagged
+        viewHolder.flagged?.setImageDrawable(if (card.flagged) viewHolder.redFlagImage else viewHolder.clearFlagImage)
         viewHolder.flagged?.setTag(R.id.TAG_POSITION, position)
         viewHolder.flagged?.setTag(R.id.TAG_CARD, card)
 
@@ -62,8 +63,10 @@ class CardListArrayAdapter(
 
     internal class ViewHolder {
         var cardFace: TextView? = null
-        var flagged: CheckBox? = null
-        var editButton: Button? = null
-        var deleteButton: Button? = null
+        var flagged: ImageView? = null
+        var editButton: ImageView? = null
+        var deleteButton: ImageView? = null
+        var clearFlagImage: Drawable? = null
+        var redFlagImage: Drawable? = null
     }
 }

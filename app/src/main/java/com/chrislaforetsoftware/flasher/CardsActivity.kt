@@ -4,6 +4,7 @@ import android.R.id.message
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
@@ -29,6 +30,9 @@ class CardsActivity() : AppCompatActivity() {
 	var sortAscending = true
 	var filterOn: String = ""
 
+	private lateinit var clearFlagImage: Drawable
+	private lateinit var redFlagImage: Drawable
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_cards)
@@ -42,6 +46,9 @@ class CardsActivity() : AppCompatActivity() {
 		activeFilterNotification = this.findViewById(R.id.active_filter_notification)
 		activeFilterNotification.visibility = View.GONE
 		actionBar.setDisplayHomeAsUpEnabled(true)
+
+		clearFlagImage = getDrawable(R.drawable.clearflag) as Drawable
+		redFlagImage = getDrawable(R.drawable.redflag) as Drawable
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -185,9 +192,10 @@ class CardsActivity() : AppCompatActivity() {
 	}
 
 	fun onClickCheckFlagged(view: View) {
-		val checkBox = view as CheckBox
+		val button = view as ImageButton
 		val card: Card = view.getTag(R.id.TAG_CARD) as Card
-		card.flagged = checkBox.isChecked
+		card.flagged = !card.flagged
+		button.setImageDrawable(if (card.flagged) redFlagImage else clearFlagImage)
 
 		val db = DatabaseHelper(this)
 		try {

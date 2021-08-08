@@ -162,5 +162,7 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="bottom"
 			android:layout_weight="1"
-			android:text="@string/end_quiz_button" />
+			android:text="@string/end_quiz_button"
+			android:background="?attr/colorPrimaryDark"
+			android:textColor="@android:color/primary_text_dark" />
 </LinearLayout>

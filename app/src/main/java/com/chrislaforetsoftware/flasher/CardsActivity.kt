@@ -1,18 +1,13 @@
 package com.chrislaforetsoftware.flasher
 
-import android.R.id.message
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.text.Editable
-import android.text.InputType
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.*
 import com.chrislaforetsoftware.flasher.adapters.CardListArrayAdapter
 import com.chrislaforetsoftware.flasher.db.DatabaseHelper
@@ -20,6 +15,7 @@ import com.chrislaforetsoftware.flasher.entities.Card
 import com.chrislaforetsoftware.flasher.entities.Deck
 import com.chrislaforetsoftware.flasher.types.StringDate
 import java.util.*
+
 
 class CardsActivity() : AppCompatActivity() {
 
@@ -97,34 +93,60 @@ class CardsActivity() : AppCompatActivity() {
 		AlertDialog.Builder(this)
 				.setTitle(getString(R.string.filter_prompt_title))
 				.setView(filterFor)
-				.setPositiveButton(getString(R.string.filter_button_text), DialogInterface.OnClickListener { dialog, whichButton ->
-					if (filterFor.text.isNotEmpty()) {
-						filterOn = filterFor.text.toString()
-					}
-					showCards()
-				})
-				.setNegativeButton(getString(R.string.clear_button_title), DialogInterface.OnClickListener { dialog, whichButton ->
-					filterOn = ""
-					showCards()
-				}).show()
+				.setPositiveButton(
+					getString(R.string.filter_button_text),
+					DialogInterface.OnClickListener { dialog, whichButton ->
+						if (filterFor.text.isNotEmpty()) {
+							filterOn = filterFor.text.toString()
+						}
+						showCards()
+					})
+				.setNegativeButton(
+					getString(R.string.clear_button_title),
+					DialogInterface.OnClickListener { dialog, whichButton ->
+						filterOn = ""
+						showCards()
+					}).show()
 	}
 
 	private fun promptForQuiz() {
-		val choices = arrayOf("Learning language", "My native language", "Flagged cards only", "New cards only", "Failed cards only")
+		val choices = arrayOf(
+			"Learning language",
+			"My native language",
+			"Flagged cards only",
+			"New cards only",
+			"Failed cards only"
+		)
 		val checkedChoices = booleanArrayOf(true, false, false, false, false)
 		AlertDialog.Builder(this)
 				.setTitle(getString(R.string.start_quiz_prompt))
 				.setMultiChoiceItems(choices, checkedChoices) { dialog, which, isChecked ->
 					checkedChoices[which] = isChecked
 				}
-				.setPositiveButton(getString(R.string.start_quiz_button), DialogInterface.OnClickListener { dialog, whichButton ->
-					startQuiz(checkedChoices[0], checkedChoices[1], checkedChoices[2], checkedChoices[3], checkedChoices[4])
-				})
-				.setNegativeButton(getString(R.string.clear_button_title), DialogInterface.OnClickListener { dialog, whichButton ->
-				}).show()
+				.setPositiveButton(
+					getString(R.string.start_quiz_button),
+					DialogInterface.OnClickListener { dialog, whichButton ->
+						startQuiz(
+							checkedChoices[0],
+							checkedChoices[1],
+							checkedChoices[2],
+							checkedChoices[3],
+							checkedChoices[4]
+						)
+					})
+				.setNegativeButton(
+					getString(R.string.clear_button_title),
+					DialogInterface.OnClickListener { dialog, whichButton ->
+					}).show()
 	}
 
-	private fun startQuiz(isLearning: Boolean, isNative: Boolean, isFlaggedOnly: Boolean, isNewOnly: Boolean, isFailedOnly: Boolean) {
+	private fun startQuiz(
+		isLearning: Boolean,
+		isNative: Boolean,
+		isFlaggedOnly: Boolean,
+		isNewOnly: Boolean,
+		isFailedOnly: Boolean
+	) {
 		val intent = Intent(this, QuizActivity::class.java)
 		intent.putExtra(DECK_EXTRA, deck)
 		if (isLearning && isNative) {
@@ -157,7 +179,9 @@ class CardsActivity() : AppCompatActivity() {
 				val lowercaseFace = it.face.toLowerCase()
 				val lowercaseReverse = it.reverse.toLowerCase()
 				val lowercaseFilterOn = filterOn.toLowerCase()
-				lowercaseFace.indexOf(lowercaseFilterOn) >= 0 || lowercaseReverse.indexOf(lowercaseFilterOn) >= 0
+				lowercaseFace.indexOf(lowercaseFilterOn) >= 0 || lowercaseReverse.indexOf(
+					lowercaseFilterOn
+				) >= 0
 			}
 		} else {
 			activeFilterNotification.visibility = View.GONE
@@ -166,10 +190,10 @@ class CardsActivity() : AppCompatActivity() {
 		val listView: ListView? = this.findViewById(R.id.card_list)
 		if (listView != null) {
 			val adapter = CardListArrayAdapter(
-					this,
-					R.layout.card_listview,
-					showFace,
-					cardList
+				this,
+				R.layout.card_listview,
+				showFace,
+				cardList
 			)
 			listView.adapter = adapter
 		}
@@ -217,80 +241,98 @@ class CardsActivity() : AppCompatActivity() {
 
 	private fun editCardContent(view: View, card: Card) {
 		val isNew = card.id == 0
-		val cardPromptBox = AlertDialog.Builder(view.context)
 		val createTitle = getString(R.string.title_create)
 		val editTitle = getString(R.string.title_edit)
 		val title = (if (isNew) createTitle else editTitle) + " " + getString(R.string.title_flashcard)
-		cardPromptBox.setTitle(title)
 
-		val layout: LinearLayout = LinearLayout(cardPromptBox.context)
-		layout.layoutParams = LinearLayout.LayoutParams(
-				LinearLayout.LayoutParams.MATCH_PARENT,
-				LinearLayout.LayoutParams.WRAP_CONTENT)
-		layout.orientation = LinearLayout.VERTICAL
+		val dialog = Dialog(view.context)
+		dialog.setContentView(R.layout.edit_cardview)
+		dialog.setTitle(title)
 
-		val facePrompt = TextView(cardPromptBox.context)
-		facePrompt.text = getString(R.string.title_face_value) + ":"
-		facePrompt.setPadding(10, 20, 10, 0)
-		layout.addView(facePrompt)
+		val windowParams = WindowManager.LayoutParams()
+		windowParams.copyFrom(dialog.window?.attributes)
+		windowParams.width = WindowManager.LayoutParams.MATCH_PARENT
+		windowParams.height = WindowManager.LayoutParams.WRAP_CONTENT
 
-		val faceText = EditText(cardPromptBox.context)
-		faceText.inputType = InputType.TYPE_CLASS_TEXT
-		faceText.setSingleLine()
-		faceText.setPadding(10, 10, 10, 10)
-		faceText.setText(card.face)
-		layout.addView(faceText)
-
-		val reversePrompt = TextView(cardPromptBox.context)
-		reversePrompt.text = getString(R.string.title_reverse_value) + ":"
-		reversePrompt.setPadding(10, 30, 10, 0)
-		layout.addView(reversePrompt)
-
-		val reverseText = EditText(cardPromptBox.context)
-		reverseText.inputType = InputType.TYPE_CLASS_TEXT
-		reverseText.setPadding(5, 10, 5, 10)
-		reverseText.setText(card.reverse)
-		layout.addView(reverseText)
-
-		cardPromptBox.setView(layout)
-
-		cardPromptBox.setPositiveButton(getString(R.string.OK)) { dialog, which ->
-			run {
-				val face = faceText.getText().toString()
-				if (face.isNotEmpty()) {
-					card.face = face
-					card.reverse = reverseText.getText().toString()
-
-					val db = DatabaseHelper(this)
-
-					// TODO prevent duplicate face value
+		dialog.show()
+		dialog.window?.attributes = windowParams
 
 
-					// TODO update deck last use
+//		val isNew = card.id == 0
+//		val cardPromptBox = AlertDialog.Builder(view.context)
+//		val createTitle = getString(R.string.title_create)
+//		val editTitle = getString(R.string.title_edit)
+//		val title = (if (isNew) createTitle else editTitle) + " " + getString(R.string.title_flashcard)
+//		cardPromptBox.setTitle(title)
 
+//		val layout: LinearLayout = LinearLayout(cardPromptBox.context)
+//		layout.layoutParams = LinearLayout.LayoutParams(
+//				LinearLayout.LayoutParams.MATCH_PARENT,
+//				LinearLayout.LayoutParams.WRAP_CONTENT)
+//		layout.orientation = LinearLayout.VERTICAL
+//
+//		val facePrompt = TextView(cardPromptBox.context)
+//		facePrompt.text = getString(R.string.title_face_value) + ":"
+//		facePrompt.setPadding(10, 20, 10, 0)
+//		layout.addView(facePrompt)
+//
+//		val faceText = EditText(cardPromptBox.context)
+//		faceText.inputType = InputType.TYPE_CLASS_TEXT
+//		faceText.setSingleLine()
+//		faceText.setPadding(10, 10, 10, 10)
+//		faceText.setText(card.face)
+//		layout.addView(faceText)
+//
+//		val reversePrompt = TextView(cardPromptBox.context)
+//		reversePrompt.text = getString(R.string.title_reverse_value) + ":"
+//		reversePrompt.setPadding(10, 30, 10, 0)
+//		layout.addView(reversePrompt)
+//
+//		val reverseText = EditText(cardPromptBox.context)
+//		reverseText.inputType = InputType.TYPE_CLASS_TEXT
+//		reverseText.setPadding(5, 10, 5, 10)
+//		reverseText.setText(card.reverse)
+//		layout.addView(reverseText)
 
-					try {
-						if (isNew) {
-							db.createCard(card)
-						} else {
-							db.updateCard(card)
-						}
-						showCards()
-					} catch (ee: Exception) {
-						val messageBox = AlertDialog.Builder(this)
-						messageBox.setTitle(getString(R.string.alert_title_error_saving_card))
-						messageBox.setMessage("Error saving $face. Is it a duplicate value?")
-						messageBox.setCancelable(false)
-						messageBox.setNeutralButton(getString(R.string.OK), null)
-						messageBox.show()
-					}
-				}
-			}
-		}
-
-		cardPromptBox.setNegativeButton(getString(R.string.CANCEL)) { dialog, which -> dialog.cancel()
-		}
-		cardPromptBox.show()
+//		cardPromptBox.setView(layoutInflater.inflate(R.layout.edit_cardview, null))
+//
+//		cardPromptBox.setPositiveButton(getString(R.string.OK)) { dialog, which ->
+//			run {
+//				val face = faceText.getText().toString()
+//				if (face.isNotEmpty()) {
+//					card.face = face
+//					card.reverse = reverseText.getText().toString()
+//
+//					val db = DatabaseHelper(this)
+//
+//					// TODO prevent duplicate face value
+//
+//
+//					// TODO update deck last use
+//
+//
+//					try {
+//						if (isNew) {
+//							db.createCard(card)
+//						} else {
+//							db.updateCard(card)
+//						}
+//						showCards()
+//					} catch (ee: Exception) {
+//						val messageBox = AlertDialog.Builder(this)
+//						messageBox.setTitle(getString(R.string.alert_title_error_saving_card))
+//						messageBox.setMessage("Error saving $face. Is it a duplicate value?")
+//						messageBox.setCancelable(false)
+//						messageBox.setNeutralButton(getString(R.string.OK), null)
+//						messageBox.show()
+//					}
+//				}
+//			}
+//		}
+//
+//		cardPromptBox.setNegativeButton(getString(R.string.CANCEL)) { dialog, which -> dialog.cancel()
+//		}
+//		cardPromptBox.show()
 	}
 
 	fun onClickButtonDelete(view: View) {

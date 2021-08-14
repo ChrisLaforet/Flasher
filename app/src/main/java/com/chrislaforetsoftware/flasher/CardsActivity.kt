@@ -255,10 +255,10 @@ class CardsActivity() : AppCompatActivity() {
 		windowParams.width = WindowManager.LayoutParams.MATCH_PARENT
 		windowParams.height = WindowManager.LayoutParams.WRAP_CONTENT
 
-		val cardFront: EditText = view.findViewById(R.id.card_front)
-		val cardReverse: EditText = view.findViewById(R.id.card_reverse)
-		val okButton: Button = view.findViewById(R.id.ok_button_prompt)
-		val cancelButton: Button = view.findViewById(R.id.cancel_button_prompt)
+		val cardFront: EditText = dialog.findViewById(R.id.card_front)
+		val cardReverse: EditText = dialog.findViewById(R.id.card_reverse)
+		val okButton: Button = dialog.findViewById(R.id.ok_button_prompt)
+		val cancelButton: Button = dialog.findViewById(R.id.cancel_button_prompt)
 
 		if (!isNew) {
 			cardFront.setText(card.face as String)
@@ -266,7 +266,24 @@ class CardsActivity() : AppCompatActivity() {
 		}
 
 		okButton.setOnClickListener {
-
+			val front:String = cardFront.text.toString().trim()
+			val reverse: String = cardReverse.text.toString().trim()
+			if (front.isEmpty() && reverse.isEmpty()) {
+				Toast.makeText(baseContext,
+						getString(R.string.cannot_save_empty_card),
+						Toast.LENGTH_SHORT).show()
+			} else if (front.isEmpty()) {
+				Toast.makeText(baseContext,
+						getString(R.string.cannot_save_blank_learning_language),
+						Toast.LENGTH_SHORT).show()
+			} else if (reverse.isEmpty()) {
+				Toast.makeText(baseContext,
+						getString(R.string.cannot_save_blank_native_language),
+						Toast.LENGTH_SHORT).show()
+			} else {
+				saveCard(card, front, reverse)
+				dialog.dismiss()
+			}
 		}
 		cancelButton.setOnClickListener {
 			dialog.cancel()
@@ -274,84 +291,37 @@ class CardsActivity() : AppCompatActivity() {
 
 		dialog.show()
 		dialog.window?.attributes = windowParams
+	}
+
+	private fun saveCard(card: Card, front: String, reverse: String) {
+		val isNew = card.id == 0
+
+		card.face = front
+		card.reverse = reverse
+
+		val db = DatabaseHelper(this)
+
+		// TODO prevent duplicate face value
 
 
+		// TODO update deck last use
 
-//		val isNew = card.id == 0
-//		val cardPromptBox = AlertDialog.Builder(view.context)
-//		val createTitle = getString(R.string.title_create)
-//		val editTitle = getString(R.string.title_edit)
-//		val title = (if (isNew) createTitle else editTitle) + " " + getString(R.string.title_flashcard)
-//		cardPromptBox.setTitle(title)
 
-//		val layout: LinearLayout = LinearLayout(cardPromptBox.context)
-//		layout.layoutParams = LinearLayout.LayoutParams(
-//				LinearLayout.LayoutParams.MATCH_PARENT,
-//				LinearLayout.LayoutParams.WRAP_CONTENT)
-//		layout.orientation = LinearLayout.VERTICAL
-//
-//		val facePrompt = TextView(cardPromptBox.context)
-//		facePrompt.text = getString(R.string.title_face_value) + ":"
-//		facePrompt.setPadding(10, 20, 10, 0)
-//		layout.addView(facePrompt)
-//
-//		val faceText = EditText(cardPromptBox.context)
-//		faceText.inputType = InputType.TYPE_CLASS_TEXT
-//		faceText.setSingleLine()
-//		faceText.setPadding(10, 10, 10, 10)
-//		faceText.setText(card.face)
-//		layout.addView(faceText)
-//
-//		val reversePrompt = TextView(cardPromptBox.context)
-//		reversePrompt.text = getString(R.string.title_reverse_value) + ":"
-//		reversePrompt.setPadding(10, 30, 10, 0)
-//		layout.addView(reversePrompt)
-//
-//		val reverseText = EditText(cardPromptBox.context)
-//		reverseText.inputType = InputType.TYPE_CLASS_TEXT
-//		reverseText.setPadding(5, 10, 5, 10)
-//		reverseText.setText(card.reverse)
-//		layout.addView(reverseText)
-
-//		cardPromptBox.setView(layoutInflater.inflate(R.layout.edit_cardview, null))
-//
-//		cardPromptBox.setPositiveButton(getString(R.string.OK)) { dialog, which ->
-//			run {
-//				val face = faceText.getText().toString()
-//				if (face.isNotEmpty()) {
-//					card.face = face
-//					card.reverse = reverseText.getText().toString()
-//
-//					val db = DatabaseHelper(this)
-//
-//					// TODO prevent duplicate face value
-//
-//
-//					// TODO update deck last use
-//
-//
-//					try {
-//						if (isNew) {
-//							db.createCard(card)
-//						} else {
-//							db.updateCard(card)
-//						}
-//						showCards()
-//					} catch (ee: Exception) {
-//						val messageBox = AlertDialog.Builder(this)
-//						messageBox.setTitle(getString(R.string.alert_title_error_saving_card))
-//						messageBox.setMessage("Error saving $face. Is it a duplicate value?")
-//						messageBox.setCancelable(false)
-//						messageBox.setNeutralButton(getString(R.string.OK), null)
-//						messageBox.show()
-//					}
-//				}
-//			}
-//		}
-//
-//		cardPromptBox.setNegativeButton(getString(R.string.CANCEL)) { dialog, which -> dialog.cancel()
-//		}
-//		cardPromptBox.show()
+		try {
+			if (isNew) {
+				db.createCard(card)
+			} else {
+				db.updateCard(card)
+			}
+			showCards()
+		} catch (ee: Exception) {
+			val messageBox = AlertDialog.Builder(this)
+			messageBox.setTitle(getString(R.string.alert_title_error_saving_card))
+			messageBox.setMessage("Error saving $front. Is it a duplicate value?")
+			messageBox.setCancelable(false)
+			messageBox.setNeutralButton(getString(R.string.OK), null)
+			messageBox.show()
+		}
 	}
 
 	fun onClickButtonDelete(view: View) {

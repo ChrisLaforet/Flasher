@@ -70,5 +70,8 @@
     <string name="no_more_cards_in_quiz_prompt">No more cards in quiz</string>
     <string name="edit_card_prompt">Edit card</string>
     <string name="delete_card_prompt">Delete card</string>
+	<string name="cannot_save_empty_card">Cannot save a card that is completely empty!</string>
+    <string name="cannot_save_blank_learning_language">Cannot save a card with a blank learning language entry!</string>
+    <string name="cannot_save_blank_native_language">Cannot save a card with a blank native language entry!</string>
 
 </resources>

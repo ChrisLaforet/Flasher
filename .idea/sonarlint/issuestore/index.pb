@@ -33,9 +33,21 @@ A
 gradle.properties,2\a\2afbb999f001938c88fa43fc2ef52abf0f8213e4
 x
 Happ/src/main/java/com/chrislaforetsoftware/flasher/pickers/DeckPicker.kt,a\0\a0cf94e882f4cc513c841a27c8484e7b515bae09
-t
-Dapp/src/main/java/com/chrislaforetsoftware/flasher/ExportActivity.kt,b\9\b9dc4627e2af4fe1f030fbe3a427a0fc33c2cab0
 x
 Happ/src/main/java/com/chrislaforetsoftware/flasher/pickers/FilePicker.kt,6\a\6a6cd7b7d6d205d86fc64264cb5d8e4afd25f29f
 r
 Bapp/src/main/java/com/chrislaforetsoftware/flasher/MainActivity.kt,0\6\0615d42d855b739321f5ae48e59b42d975119dbf
+€
+Papp/src/main/java/com/chrislaforetsoftware/flasher/pickers/ExportFolderPicker.kt,5\5\552c5367b2db202d858e3a242cb86a1fd1f4da72
+t
+Dapp/src/main/java/com/chrislaforetsoftware/flasher/ImportActivity.kt,8\f\8f2a38e5215a31fd270c48cabccf9231dcfa2e6e
+P
+ app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
+@
+app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
+<
+build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
+r
+Bapp/src/main/java/com/chrislaforetsoftware/flasher/QuizActivity.kt,9\b\9bfeab5eded79ab816c98e0f9c821613d0e1d298
+o
+?app/src/main/java/com/chrislaforetsoftware/flasher/Constants.kt,3\6\363a45bdf3aa2411ccc49b8a0bc2bf10de99f16a

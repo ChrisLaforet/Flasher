@@ -21,18 +21,18 @@
 			android:layout_height="100dp"
 			android:layout_gravity="top|center_horizontal"
 			android:orientation="vertical"
-			android:weightSum="5">
+			android:weightSum="6">
 
 			<Space
-					android:layout_width="match_parent"
-					android:layout_height="6dp"
-					android:layout_weight="1" />
+				android:layout_width="match_parent"
+				android:layout_height="6dp"
+				android:layout_weight="1" />
 
 			<TextView
 				android:id="@+id/card_front_title"
 				android:layout_width="match_parent"
 				android:layout_height="0dp"
-				android:layout_weight="1"
+				android:layout_weight="2"
 				android:text="@string/learning_language_prompt"
 				android:textAlignment="center"
 				android:textColor="@android:color/secondary_text_dark"

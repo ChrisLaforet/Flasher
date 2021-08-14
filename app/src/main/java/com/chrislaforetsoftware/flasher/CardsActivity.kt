@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.text.Editable
 import android.view.*
 import android.widget.*
 import com.chrislaforetsoftware.flasher.adapters.CardListArrayAdapter
@@ -254,8 +255,26 @@ class CardsActivity() : AppCompatActivity() {
 		windowParams.width = WindowManager.LayoutParams.MATCH_PARENT
 		windowParams.height = WindowManager.LayoutParams.WRAP_CONTENT
 
+		val cardFront: EditText = view.findViewById(R.id.card_front)
+		val cardReverse: EditText = view.findViewById(R.id.card_reverse)
+		val okButton: Button = view.findViewById(R.id.ok_button_prompt)
+		val cancelButton: Button = view.findViewById(R.id.cancel_button_prompt)
+
+		if (!isNew) {
+			cardFront.setText(card.face as String)
+			cardReverse.setText(card.reverse as String)
+		}
+
+		okButton.setOnClickListener {
+
+		}
+		cancelButton.setOnClickListener {
+			dialog.cancel()
+		}
+
 		dialog.show()
 		dialog.window?.attributes = windowParams
+
 
 
 //		val isNew = card.id == 0

@@ -3,7 +3,7 @@ package com.chrislaforetsoftware.flasher
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
@@ -12,6 +12,7 @@ import android.widget.Toast
 import com.chrislaforetsoftware.flasher.db.DatabaseHelper
 import com.chrislaforetsoftware.flasher.entities.Card
 import com.chrislaforetsoftware.flasher.entities.Deck
+import com.chrislaforetsoftware.flasher.entities.Fragment
 import com.chrislaforetsoftware.flasher.pickers.DeckPicker
 import com.chrislaforetsoftware.flasher.pickers.FilePicker
 import com.chrislaforetsoftware.flasher.pickers.IDeckPickerListener
@@ -105,7 +106,7 @@ class ImportActivity() : AppCompatActivity(), IDeckPickerListener {
             }
 
             if (targetDeck == null) {
-                Toast.makeText(this, "Cannot get or create deck for import", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.cannot_get_or_create_deck_for_import), Toast.LENGTH_LONG).show()
                 return
             }
 
@@ -145,6 +146,13 @@ class ImportActivity() : AppCompatActivity(), IDeckPickerListener {
             } else {
                 saveNewCardAndAddToLookup(card, targetDeck, cardFaces)
             }
+        }
+
+        for (fragment in deckWithCards.fragments) {
+            val record = Fragment()
+            record.deckId = targetDeck.id
+            record.fragment = fragment
+            getDatabase().createFragment(record)
         }
 
         Toast.makeText(baseContext,

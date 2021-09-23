@@ -2,6 +2,7 @@ package com.chrislaforetsoftware.flasher.serializers
 
 import com.chrislaforetsoftware.flasher.entities.Card
 import com.chrislaforetsoftware.flasher.entities.Deck
+import com.chrislaforetsoftware.flasher.entities.Fragment
 import com.chrislaforetsoftware.flasher.types.StringDate
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -9,7 +10,7 @@ import java.util.*
 
 class DeckSerializer {
 	companion object {
-		fun serializeDeck(deck: Deck, cards: List<Card>, includeFlaggings: Boolean, includeStatistics: Boolean): String {
+		fun serializeDeck(deck: Deck, cards: List<Card>, fragments: List<Fragment>, includeFlaggings: Boolean, includeStatistics: Boolean): String {
 			val cardList = mutableListOf<SerializedCard>()
 			for (card in cards) {
 				cardList.add(
@@ -23,7 +24,12 @@ class DeckSerializer {
 					)
 				)
 			}
-			val serializedDeck = SerializedDeck(deck.name, includeFlaggings, includeStatistics, cardList.toTypedArray())
+			val fragmentList = mutableListOf<String>()
+			for (fragment in fragments) {
+				fragmentList.add(fragment.fragment)
+			}
+
+			val serializedDeck = SerializedDeck(deck.name, includeFlaggings, includeStatistics, cardList.toTypedArray(), fragmentList.toTypedArray())
 			return Json.encodeToString(SerializedDeck.serializer(), serializedDeck)
 		}
 
@@ -48,7 +54,12 @@ class DeckSerializer {
 				cards.add(card)
 			}
 
-			return DeckWithCards(deck, cards)
+			val fragments = mutableListOf<String>()
+			for (reconsitutedFragment in reconstituted.fragments) {
+				fragments.add(reconsitutedFragment)
+			}
+
+			return DeckWithCards(deck, cards, fragments)
 		}
 	}
 }
@@ -58,7 +69,8 @@ class DeckSerializer {
 private data class SerializedDeck(val name: String,
 								  val includesFlaggings: Boolean,
 								  val includesStatistics: Boolean,
-								  val cards: Array<SerializedCard>) {
+								  val cards: Array<SerializedCard>,
+								  val fragments: Array<String>) {
 }
 
 

@@ -58,7 +58,7 @@ class CardListArrayAdapter(
         viewHolder.deleteButton?.setTag(R.id.TAG_POSITION, position)
         viewHolder.deleteButton?.setTag(R.id.TAG_CARD, card)
 
-         return rowView
+        return rowView
     }
 
     internal class ViewHolder {

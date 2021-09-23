@@ -3,19 +3,20 @@ package com.chrislaforetsoftware.flasher
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import com.chrislaforetsoftware.flasher.component.CardEditPopup
 import com.chrislaforetsoftware.flasher.db.DatabaseHelper
 import com.chrislaforetsoftware.flasher.entities.Card
 import com.chrislaforetsoftware.flasher.entities.Deck
 import kotlin.random.Random
 
 
-class QuizActivity : AppCompatActivity() {
+class QuizActivity : AppCompatActivity(), CardEditPopup.CardEditNoticeListener {
 
 	private lateinit var deck: Deck;
 
@@ -109,9 +110,9 @@ class QuizActivity : AppCompatActivity() {
 
 		val editButton: ImageButton = this.findViewById(R.id.button_edit)
 		editButton.setOnClickListener {
+			editCard(it, card)
 		}
 
-		showCard(card)
 	}
 
 	private fun showCard(card: Card) {
@@ -223,5 +224,19 @@ class QuizActivity : AppCompatActivity() {
 		val shuffledCards = mutableListOf<Card>()
 		shuffler.forEach { shuffledCards.add(cards[it]) }
 		return shuffledCards
+	}
+
+	private fun editCard(view: View, card: Card) {
+		val editPopup = CardEditPopup(this)
+		editPopup.editCardContent(view, card)
+		showCard(card)
+	}
+
+	override fun onCardChanged(view: View, card: Card, noticeValue: String) {
+		showCard(card)
+	}
+
+	override fun onCardNotChanged(view: View, card: Card, noticeValue: String) {
+		// does nothing
 	}
 }

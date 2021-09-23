@@ -2,7 +2,7 @@ package com.chrislaforetsoftware.flasher
 
 import android.os.Bundle
 import android.os.Environment
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
@@ -11,6 +11,7 @@ import android.widget.Toast
 import com.chrislaforetsoftware.flasher.db.DatabaseHelper
 import com.chrislaforetsoftware.flasher.entities.Card
 import com.chrislaforetsoftware.flasher.entities.Deck
+import com.chrislaforetsoftware.flasher.entities.Fragment
 import com.chrislaforetsoftware.flasher.pickers.DeckPicker
 import com.chrislaforetsoftware.flasher.pickers.ExportFolderPicker
 import com.chrislaforetsoftware.flasher.pickers.IDeckPickerListener
@@ -87,7 +88,7 @@ class ExportActivity() : AppCompatActivity(), IDeckPickerListener, IExportFolder
 				Toast.makeText(this, "Cannot load deck for ${sourceDeck.text}", Toast.LENGTH_LONG).show()
 				return
 			}
-			exportDeckToFile(deck, this.getDatabase().getCardsByDeckId(deck.id))
+			exportDeckToFile(deck, this.getDatabase().getCardsByDeckId(deck.id), this.getDatabase().getFragmentsByDeckId(deck.id))
 		} catch (e: Exception) {
 			Toast.makeText(baseContext,
 					e.message,
@@ -103,7 +104,7 @@ class ExportActivity() : AppCompatActivity(), IDeckPickerListener, IExportFolder
 		return File(folder, filename)
 	}
 
-	private fun exportDeckToFile(deck: Deck, cards: List<Card>) {
+	private fun exportDeckToFile(deck: Deck, cards: List<Card>, fragments: List<Fragment>) {
 		val filename = "Flasher.${deck.id}.${deck.getDeckNameAsFilename()}.json"
 		try {
 			val file = getFullExportFile(filename)
@@ -111,7 +112,7 @@ class ExportActivity() : AppCompatActivity(), IDeckPickerListener, IExportFolder
 			val outputFile = FileOutputStream(file)
 			val outputWriter = OutputStreamWriter(outputFile)
 
-			val serialized = DeckSerializer.serializeDeck(deck, cards, includeFlaggingCheckbox.isChecked, includeStatisticsCheckbox.isChecked)
+			val serialized = DeckSerializer.serializeDeck(deck, cards, fragments, includeFlaggingCheckbox.isChecked, includeStatisticsCheckbox.isChecked)
 			outputWriter.write(serialized)
 
 			outputWriter.close()

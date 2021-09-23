@@ -17,3 +17,6 @@ const val SOURCE_FILE_SELECTED = 1
 const val REQUEST_EXTERNAL_STORAGE = 1
 
 const val PROMPT_PEEK_SLEEP_MSEC: Long = 750
+
+const val NEW = "NEW"
+const val EDIT = "EDIT"

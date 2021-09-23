@@ -1,16 +1,15 @@
 package com.chrislaforetsoftware.flasher
 
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.text.Editable
+import androidx.appcompat.app.AppCompatActivity
 import android.view.*
 import android.widget.*
 import com.chrislaforetsoftware.flasher.adapters.CardListArrayAdapter
+import com.chrislaforetsoftware.flasher.component.CardEditPopup
 import com.chrislaforetsoftware.flasher.db.DatabaseHelper
 import com.chrislaforetsoftware.flasher.entities.Card
 import com.chrislaforetsoftware.flasher.entities.Deck
@@ -18,7 +17,7 @@ import com.chrislaforetsoftware.flasher.types.StringDate
 import java.util.*
 
 
-class CardsActivity() : AppCompatActivity() {
+class CardsActivity() : AppCompatActivity(), CardEditPopup.CardEditNoticeListener {
 
 	private lateinit var deck: Deck
 	private lateinit var activeFilterNotification: TextView
@@ -92,22 +91,22 @@ class CardsActivity() : AppCompatActivity() {
 		val filterFor: EditText = EditText(this)
 		filterFor.isSingleLine = true
 		AlertDialog.Builder(this)
-				.setTitle(getString(R.string.filter_prompt_title))
-				.setView(filterFor)
-				.setPositiveButton(
-					getString(R.string.filter_button_text),
-					DialogInterface.OnClickListener { dialog, whichButton ->
-						if (filterFor.text.isNotEmpty()) {
-							filterOn = filterFor.text.toString()
-						}
-						showCards()
-					})
-				.setNegativeButton(
-					getString(R.string.clear_button_title),
-					DialogInterface.OnClickListener { dialog, whichButton ->
-						filterOn = ""
-						showCards()
-					}).show()
+			.setTitle(getString(R.string.filter_prompt_title))
+			.setView(filterFor)
+			.setPositiveButton(
+				getString(R.string.filter_button_text),
+				DialogInterface.OnClickListener { dialog, whichButton ->
+					if (filterFor.text.isNotEmpty()) {
+						filterOn = filterFor.text.toString()
+					}
+					showCards()
+				})
+			.setNegativeButton(
+				getString(R.string.clear_button_title),
+				DialogInterface.OnClickListener { dialog, whichButton ->
+					filterOn = ""
+					showCards()
+				}).show()
 	}
 
 	private fun promptForQuiz() {
@@ -120,25 +119,25 @@ class CardsActivity() : AppCompatActivity() {
 		)
 		val checkedChoices = booleanArrayOf(true, false, false, false, false)
 		AlertDialog.Builder(this)
-				.setTitle(getString(R.string.start_quiz_prompt))
-				.setMultiChoiceItems(choices, checkedChoices) { dialog, which, isChecked ->
-					checkedChoices[which] = isChecked
-				}
-				.setPositiveButton(
-					getString(R.string.start_quiz_button),
-					DialogInterface.OnClickListener { dialog, whichButton ->
-						startQuiz(
-							checkedChoices[0],
-							checkedChoices[1],
-							checkedChoices[2],
-							checkedChoices[3],
-							checkedChoices[4]
-						)
-					})
-				.setNegativeButton(
-					getString(R.string.clear_button_title),
-					DialogInterface.OnClickListener { dialog, whichButton ->
-					}).show()
+			.setTitle(getString(R.string.start_quiz_prompt))
+			.setMultiChoiceItems(choices, checkedChoices) { dialog, which, isChecked ->
+				checkedChoices[which] = isChecked
+			}
+			.setPositiveButton(
+				getString(R.string.start_quiz_button),
+				DialogInterface.OnClickListener { dialog, whichButton ->
+					startQuiz(
+						checkedChoices[0],
+						checkedChoices[1],
+						checkedChoices[2],
+						checkedChoices[3],
+						checkedChoices[4]
+					)
+				})
+			.setNegativeButton(
+				getString(R.string.clear_button_title),
+				DialogInterface.OnClickListener { dialog, whichButton ->
+				}).show()
 	}
 
 	private fun startQuiz(
@@ -175,7 +174,7 @@ class CardsActivity() : AppCompatActivity() {
 		var cardList: List<Card> = sortCards(this.getDatabase().getCardsByDeckId(deck.id))
 		if (filterOn.isNotEmpty()) {
 			activeFilterNotification.visibility = View.VISIBLE
-			activeFilterNotification.text = "Filtering cards on: ${ filterOn }"
+			activeFilterNotification.text = "Filtering cards on: ${filterOn}"
 			cardList = cardList.filter {
 				val lowercaseFace = it.face.toLowerCase()
 				val lowercaseReverse = it.reverse.toLowerCase()
@@ -213,7 +212,27 @@ class CardsActivity() : AppCompatActivity() {
 		card.created = now.representation
 		card.deckId = deck.id
 
-		editCardContent(view, card)
+		editCardContent(view, card, NEW)
+	}
+
+	private fun editCardContent(view: View, card: Card, noticeValue: String) {
+		val editPopup = CardEditPopup(this)
+		editPopup.editCardContent(view, card, noticeValue)
+	}
+
+	override fun onCardChanged(view: View, card: Card, noticeValue: String) {
+		if (noticeValue == NEW) {
+			showCards()
+		} else if (noticeValue == EDIT) {
+			// the view is the edit button that is a peer of the textbox
+			val viewGroup: ViewGroup = view.parent as ViewGroup ?: return
+			val cardFace = viewGroup.findViewById<TextView>(R.id.card_face)
+			cardFace!!.text = if (showFace) card.face else card.reverse
+		}
+	}
+
+	override fun onCardNotChanged(view: View, card: Card, noticeValue: String) {
+		// does nothing
 	}
 
 	fun onClickCheckFlagged(view: View) {
@@ -237,91 +256,7 @@ class CardsActivity() : AppCompatActivity() {
 
 	fun onClickButtonEdit(view: View) {
 		val card: Card = view.getTag(R.id.TAG_CARD) as Card
-		editCardContent(view, card)
-	}
-
-	private fun editCardContent(view: View, card: Card) {
-		val isNew = card.id == 0
-		val createTitle = getString(R.string.title_create)
-		val editTitle = getString(R.string.title_edit)
-		val title = (if (isNew) createTitle else editTitle) + " " + getString(R.string.title_flashcard)
-
-		val dialog = Dialog(view.context)
-		dialog.setContentView(R.layout.edit_cardview)
-		dialog.setTitle(title)
-
-		val windowParams = WindowManager.LayoutParams()
-		windowParams.copyFrom(dialog.window?.attributes)
-		windowParams.width = WindowManager.LayoutParams.MATCH_PARENT
-		windowParams.height = WindowManager.LayoutParams.WRAP_CONTENT
-
-		val cardFront: EditText = dialog.findViewById(R.id.card_front)
-		val cardReverse: EditText = dialog.findViewById(R.id.card_reverse)
-		val okButton: Button = dialog.findViewById(R.id.ok_button_prompt)
-		val cancelButton: Button = dialog.findViewById(R.id.cancel_button_prompt)
-
-		if (!isNew) {
-			cardFront.setText(card.face as String)
-			cardReverse.setText(card.reverse as String)
-		}
-
-		okButton.setOnClickListener {
-			val front:String = cardFront.text.toString().trim()
-			val reverse: String = cardReverse.text.toString().trim()
-			if (front.isEmpty() && reverse.isEmpty()) {
-				Toast.makeText(baseContext,
-						getString(R.string.cannot_save_empty_card),
-						Toast.LENGTH_SHORT).show()
-			} else if (front.isEmpty()) {
-				Toast.makeText(baseContext,
-						getString(R.string.cannot_save_blank_learning_language),
-						Toast.LENGTH_SHORT).show()
-			} else if (reverse.isEmpty()) {
-				Toast.makeText(baseContext,
-						getString(R.string.cannot_save_blank_native_language),
-						Toast.LENGTH_SHORT).show()
-			} else {
-				saveCard(card, front, reverse)
-				dialog.dismiss()
-			}
-		}
-		cancelButton.setOnClickListener {
-			dialog.cancel()
-		}
-
-		dialog.show()
-		dialog.window?.attributes = windowParams
-	}
-
-	private fun saveCard(card: Card, front: String, reverse: String) {
-		val isNew = card.id == 0
-
-		card.face = front
-		card.reverse = reverse
-
-		val db = DatabaseHelper(this)
-
-		// TODO prevent duplicate face value
-
-
-		// TODO update deck last use
-
-
-		try {
-			if (isNew) {
-				db.createCard(card)
-			} else {
-				db.updateCard(card)
-			}
-			showCards()
-		} catch (ee: Exception) {
-			val messageBox = AlertDialog.Builder(this)
-			messageBox.setTitle(getString(R.string.alert_title_error_saving_card))
-			messageBox.setMessage("Error saving $front. Is it a duplicate value?")
-			messageBox.setCancelable(false)
-			messageBox.setNeutralButton(getString(R.string.OK), null)
-			messageBox.show()
-		}
+		editCardContent(view, card, EDIT)
 	}
 
 	fun onClickButtonDelete(view: View) {

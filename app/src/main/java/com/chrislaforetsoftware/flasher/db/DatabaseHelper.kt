@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.chrislaforetsoftware.flasher.entities.Card
 import com.chrislaforetsoftware.flasher.entities.Deck
+import com.chrislaforetsoftware.flasher.entities.Fragment
 import com.chrislaforetsoftware.flasher.exception.DatabaseException
 
 class DatabaseHelper(context: Context)
@@ -31,6 +32,11 @@ class DatabaseHelper(context: Context)
         const val CARD_CORRECT = "TotalCorrect"
         const val CARD_MISSES = "TotalMisses"
         const val CARD_FLAGGED = "Flagged"
+
+        const val FRAGMENT_TABLE = "fragments"
+        const val FRAGMENT_ID = "ID"
+        const val FRAGMENT_DECK_ID = "DeckID"
+        const val FRAGMENT_FRAGMENT = "Fragment"
     }
 
     val db: SQLiteDatabase by lazy {
@@ -58,6 +64,13 @@ class DatabaseHelper(context: Context)
                 CARD_FLAGGED + " INTEGER, " +
                 "FOREIGN KEY(" + CARD_DECK_ID + ") REFERENCES " + DECK_TABLE + "(" + DECK_ID + ") ON DELETE CASCADE " +
                 ")")
+
+        db?.execSQL("CREATE TABLE " + FRAGMENT_TABLE + " (" +
+                FRAGMENT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                FRAGMENT_DECK_ID + " INTEGER NOT NULL, " +
+                FRAGMENT_FRAGMENT + " TEXT NOT NULL, " +
+                "FOREIGN KEY(" + FRAGMENT_DECK_ID + ") REFERENCES " + DECK_TABLE + "(" + DECK_ID + ") ON DELETE CASCADE " +
+                ")")
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, fromVersion: Int, toVersion: Int) {
@@ -84,24 +97,6 @@ class DatabaseHelper(context: Context)
         }
     }
 
-    fun createCard(card: Card) {
-        val db: SQLiteDatabase = this.writableDatabase
-        db.use {
-            val values = ContentValues()
-            values.put(CARD_DECK_ID, card.deckId)
-            values.put(CARD_FACE, card.face)
-            values.put(CARD_REVERSE, card.reverse)
-            values.put(CARD_CREATED, card.created)
-            values.put(CARD_QUIZZES, card.quizzes)
-            values.put(CARD_CORRECT, card.correct)
-            values.put(CARD_MISSES, card.misses)
-            values.put(CARD_FLAGGED, if (card.flagged) 1 else 0)
-            val rowId = db.insert(CARD_TABLE,null, values)
-            checkRowId(rowId, CARD_TABLE)
-            card.id = rowId.toInt()
-        }
-    }
-
     fun updateDeck(deck: Deck) {
         val db: SQLiteDatabase = this.writableDatabase
         db.use {
@@ -112,25 +107,6 @@ class DatabaseHelper(context: Context)
             val success = db.update(DECK_TABLE, values,DECK_ID + "=" + deck.id, null)
             if (success == 0) {
                 throw DatabaseException("Error updating $DECK_TABLE")
-            }
-        }
-    }
-
-    fun updateCard(card: Card) {
-        val db: SQLiteDatabase = this.writableDatabase
-        db.use {
-            val values = ContentValues()
-            values.put(CARD_DECK_ID, card.deckId)
-            values.put(CARD_FACE, card.face)
-            values.put(CARD_REVERSE, card.reverse)
-            values.put(CARD_CREATED, card.created)
-            values.put(CARD_QUIZZES, card.quizzes)
-            values.put(CARD_CORRECT, card.correct)
-            values.put(CARD_MISSES, card.misses)
-            values.put(CARD_FLAGGED, if (card.flagged) 1 else 0)
-            val success = db.update(CARD_TABLE, values,CARD_ID + "=" + card.id, null)
-            if (success == 0) {
-                throw DatabaseException("Error updating $CARD_TABLE")
             }
         }
     }
@@ -206,6 +182,24 @@ class DatabaseHelper(context: Context)
         return card
     }
 
+    fun createCard(card: Card) {
+        val db: SQLiteDatabase = this.writableDatabase
+        db.use {
+            val values = ContentValues()
+            values.put(CARD_DECK_ID, card.deckId)
+            values.put(CARD_FACE, card.face)
+            values.put(CARD_REVERSE, card.reverse)
+            values.put(CARD_CREATED, card.created)
+            values.put(CARD_QUIZZES, card.quizzes)
+            values.put(CARD_CORRECT, card.correct)
+            values.put(CARD_MISSES, card.misses)
+            values.put(CARD_FLAGGED, if (card.flagged) 1 else 0)
+            val rowId = db.insert(CARD_TABLE,null, values)
+            checkRowId(rowId, CARD_TABLE)
+            card.id = rowId.toInt()
+        }
+    }
+
     fun getCardsByDeckId(deckId: Int): List<Card> {
         val cards: MutableList<Card> = mutableListOf()
         val db: SQLiteDatabase = this.readableDatabase
@@ -236,10 +230,99 @@ class DatabaseHelper(context: Context)
         return card
     }
 
+    fun updateCard(card: Card) {
+        val db: SQLiteDatabase = this.writableDatabase
+        db.use {
+            val values = ContentValues()
+            values.put(CARD_DECK_ID, card.deckId)
+            values.put(CARD_FACE, card.face)
+            values.put(CARD_REVERSE, card.reverse)
+            values.put(CARD_CREATED, card.created)
+            values.put(CARD_QUIZZES, card.quizzes)
+            values.put(CARD_CORRECT, card.correct)
+            values.put(CARD_MISSES, card.misses)
+            values.put(CARD_FLAGGED, if (card.flagged) 1 else 0)
+            val success = db.update(CARD_TABLE, values,CARD_ID + "=" + card.id, null)
+            if (success == 0) {
+                throw DatabaseException("Error updating $CARD_TABLE")
+            }
+        }
+    }
+
     fun deleteCard(card: Card) {
         val db: SQLiteDatabase = this.writableDatabase
         db.use {
             db.delete(CARD_TABLE, "$CARD_ID=${card.id}", null)
+        }
+    }
+
+    private fun extractFragmentFromCursor(cursor: Cursor): Fragment {
+        val fragment = Fragment()
+        fragment.id = cursor.getInt(cursor.getColumnIndex(FRAGMENT_ID))
+        fragment.deckId = cursor.getInt(cursor.getColumnIndex(FRAGMENT_DECK_ID))
+        fragment.fragment = cursor.getString(cursor.getColumnIndex(FRAGMENT_FRAGMENT))
+        return fragment
+    }
+
+    fun createFragment(fragment: Fragment) {
+        val db: SQLiteDatabase = this.writableDatabase
+        db.use {
+            val values = ContentValues()
+            values.put(FRAGMENT_DECK_ID, fragment.deckId)
+            values.put(FRAGMENT_FRAGMENT, fragment.fragment)
+            val rowId = db.insert(FRAGMENT_TABLE,null, values)
+            checkRowId(rowId, FRAGMENT_TABLE)
+            fragment.id = rowId.toInt()
+        }
+    }
+
+    fun getFragmentsByDeckId(deckId: Int): List<Fragment> {
+        val fragments: MutableList<Fragment> = mutableListOf()
+        val db: SQLiteDatabase = this.readableDatabase
+        db.use {
+            val selectQuery = "SELECT * FROM $FRAGMENT_TABLE WHERE $FRAGMENT_DECK_ID = $deckId"
+            val cursor = db.rawQuery(selectQuery, null)
+            if (cursor != null) {
+                while (cursor.moveToNext()) {
+                    fragments.add(extractFragmentFromCursor(cursor))
+                }
+            }
+        }
+        return fragments
+    }
+
+    fun getFragmentById(id: Int): Fragment? {
+        var fragment: Fragment? = null
+        val db: SQLiteDatabase = this.readableDatabase
+        db.use {
+            val selectQuery = "SELECT * FROM $FRAGMENT_TABLE WHERE $FRAGMENT_ID = $id"
+            val cursor = db.rawQuery(selectQuery, null)
+            if (cursor != null) {
+                while (cursor.moveToNext()) {
+                    fragment = extractFragmentFromCursor(cursor)
+                }
+            }
+        }
+        return fragment
+    }
+
+    fun updateFragment(fragment: Fragment) {
+        val db: SQLiteDatabase = this.writableDatabase
+        db.use {
+            val values = ContentValues()
+            values.put(FRAGMENT_DECK_ID, fragment.deckId)
+            values.put(FRAGMENT_FRAGMENT, fragment.fragment)
+            val success = db.update(FRAGMENT_TABLE, values,FRAGMENT_ID + "=" + fragment.id, null)
+            if (success == 0) {
+                throw DatabaseException("Error updating $FRAGMENT_TABLE")
+            }
+        }
+    }
+
+    fun deleteFragment(fragment: Fragment) {
+        val db: SQLiteDatabase = this.writableDatabase
+        db.use {
+            db.delete(FRAGMENT_TABLE, "$FRAGMENT_ID=${fragment.id}", null)
         }
     }
 }

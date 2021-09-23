@@ -18,12 +18,13 @@ import kotlin.random.Random
 
 class QuizActivity : AppCompatActivity(), CardEditPopup.CardEditNoticeListener {
 
-	private lateinit var deck: Deck;
+	private lateinit var deck: Deck
 
 	private lateinit var cardFront: TextView
 	private lateinit var cardReverse: TextView
 
 	private lateinit var cardLanguagePrompt: TextView
+	private lateinit var quizPercentagePrompt: TextView
 	private lateinit var cardGoodPrompt: TextView
 	private lateinit var cardFailedPrompt: TextView
 	private lateinit var cardFlaggingButton: ImageButton
@@ -34,6 +35,8 @@ class QuizActivity : AppCompatActivity(), CardEditPopup.CardEditNoticeListener {
 
 	private lateinit var clearFlagImage: Drawable
 	private lateinit var redFlagImage: Drawable
+
+	private var percentage: Int = 0
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -52,6 +55,7 @@ class QuizActivity : AppCompatActivity(), CardEditPopup.CardEditNoticeListener {
 		cardReverse = this.findViewById(R.id.card_reverse)
 
 		cardLanguagePrompt = this.findViewById(R.id.card_language_prompt)
+		quizPercentagePrompt = this.findViewById(R.id.quiz_percentage_prompt)
 		cardGoodPrompt = this.findViewById(R.id.card_good_prompt)
 		cardFailedPrompt = this.findViewById(R.id.card_failed_prompt)
 
@@ -67,6 +71,7 @@ class QuizActivity : AppCompatActivity(), CardEditPopup.CardEditNoticeListener {
 			return
 		}
 		var nextCardIndex = 0
+		percentage = (nextCardIndex * 100) / cards.size
 		var card = cards[nextCardIndex++]
 
 		val endQuizButton: Button = this.findViewById(R.id.end_quiz_button)
@@ -92,6 +97,7 @@ class QuizActivity : AppCompatActivity(), CardEditPopup.CardEditNoticeListener {
 			if (nextCardIndex >= cards.size) {
 				promptAndFinish()
 			} else {
+				percentage = (nextCardIndex * 100) / cards.size
 				card = cards[nextCardIndex++]
 				showCard(card)
 			}
@@ -103,6 +109,7 @@ class QuizActivity : AppCompatActivity(), CardEditPopup.CardEditNoticeListener {
 			if (nextCardIndex >= cards.size) {
 				promptAndFinish()
 			} else {
+				percentage = (nextCardIndex * 100) / cards.size
 				card = cards[nextCardIndex++]
 				showCard(card)
 			}
@@ -113,6 +120,7 @@ class QuizActivity : AppCompatActivity(), CardEditPopup.CardEditNoticeListener {
 			editCard(it, card)
 		}
 
+		showCard(card)
 	}
 
 	private fun showCard(card: Card) {
@@ -132,6 +140,8 @@ class QuizActivity : AppCompatActivity(), CardEditPopup.CardEditNoticeListener {
 		}
 		cardGoodPrompt.text = card.correct.toString()
 		cardFailedPrompt.text = card.misses.toString()
+
+		quizPercentagePrompt.text = "$percentage%"
 
 		cardFlaggingButton.setImageDrawable(if (card.flagged) redFlagImage else clearFlagImage)
 	}
@@ -212,7 +222,7 @@ class QuizActivity : AppCompatActivity(), CardEditPopup.CardEditNoticeListener {
 			return cards
 		}
 
-		var total: Int = 0
+		var total = 0
 		val shuffler = IntArray(cards.size) { -1 }
 		while (total < shuffler.size) {
 			val nextValue = Random.nextInt(0, shuffler.size)

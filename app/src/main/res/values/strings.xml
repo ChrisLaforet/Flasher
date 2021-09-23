@@ -74,5 +74,6 @@
     <string name="cannot_save_blank_learning_language">Cannot save a card with a blank learning language entry!</string>
     <string name="cannot_save_blank_native_language">Cannot save a card with a blank native language entry!</string>
 	<string name="cannot_get_or_create_deck_for_import">Cannot get or create deck for import</string>
+	<string name="number_zero">0</string>
 
 </resources>

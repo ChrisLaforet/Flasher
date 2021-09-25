@@ -20,7 +20,7 @@ class CardEditPopup(private val activity: AppCompatActivity) {
         fun onCardNotChanged(view: View, card: Card, noticeValue: String)
     }
 
-    private lateinit var listener: CardEditNoticeListener
+    private var listener: CardEditNoticeListener
 
     init {
         try {
@@ -116,5 +116,4 @@ class CardEditPopup(private val activity: AppCompatActivity) {
         }
         return false
     }
-
 }

@@ -20,15 +20,15 @@ class CardListArrayAdapter(
         return position.toLong()
     }
 
-    override fun getItem(position: Int): Card? {
-        return cardsList.get(position)
+    override fun getItem(position: Int): Card {
+        return cardsList[position]
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val viewHolder: ViewHolder
         var rowView = convertView
         if (rowView == null) {
-            val layoutInflater: LayoutInflater = activity.getLayoutInflater()
+            val layoutInflater: LayoutInflater = activity.layoutInflater
             rowView = layoutInflater.inflate(layoutResource, null, true)
 
             viewHolder = ViewHolder()
@@ -40,7 +40,7 @@ class CardListArrayAdapter(
             viewHolder.clearFlagImage = rowView.context.getDrawable(R.drawable.clearflag) as Drawable
             viewHolder.redFlagImage = rowView.context.getDrawable(R.drawable.redflag) as Drawable
 
-            rowView.setTag(viewHolder)
+            rowView.tag = viewHolder
         } else {
             viewHolder = rowView.tag as ViewHolder
         }

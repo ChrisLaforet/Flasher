@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--  Single List Item Design -->
 
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/label"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:padding="10dp"
-    android:textSize="16sp"
-    android:textStyle="bold" >
-</TextView>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent">
+
+	<TextView
+			android:id="@+id/label"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:padding="10dp"
+			android:textSize="16sp"
+			android:textStyle="bold"
+			android:onClick="onClickSelect"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toStartOf="@id/deck_edit"
+			app:layout_constraintTop_toTopOf="parent"
+			/>
+
+	<ImageButton
+			android:id="@+id/deck_edit"
+			android:layout_width="32dp"
+			android:layout_height="fill_parent"
+			android:background="?android:attr/colorBackground"
+			android:contentDescription="@string/delete_card_prompt"
+			android:onClick="onClickButtonEdit"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="1.0"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:srcCompat="@drawable/edit" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

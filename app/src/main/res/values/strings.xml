@@ -75,5 +75,14 @@
     <string name="cannot_save_blank_native_language">Cannot save a card with a blank native language entry!</string>
 	<string name="cannot_get_or_create_deck_for_import">Cannot get or create deck for import</string>
 	<string name="number_zero">0</string>
+	<string name="change_deck_name">Change deck name</string>
+    <string name="articles_in_learning_language">Learning language articles (e.g. a, an, the)</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="edit_deck">Edit deck</string>
+    <string name="cannot_rename_deck">Cannot rename deck because this name already exists on another deck</string>
+    <string name="error_changing_deck_name">Error changing deck name</string>
+    <string name="error_saving_articles">Error saving articles</string>
+    <string name="error_encountered_updating_articles">Error encountered while updating list of articles for deck.</string>
 
 </resources>

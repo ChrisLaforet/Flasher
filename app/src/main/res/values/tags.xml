@@ -1,4 +1,5 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <item name="TAG_POSITION" type="id"/>
     <item name="TAG_CARD" type="id"/>
+    <item name="TAG_DECK" type="id"/>
 </resources>

@@ -19,13 +19,18 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ListView
+import com.chrislaforetsoftware.flasher.adapters.CardListArrayAdapter
+import com.chrislaforetsoftware.flasher.adapters.DeckListArrayAdapter
+import com.chrislaforetsoftware.flasher.component.CardEditPopup
+import com.chrislaforetsoftware.flasher.component.DeckEditPopup
 import com.chrislaforetsoftware.flasher.db.DatabaseHelper
+import com.chrislaforetsoftware.flasher.entities.Card
 import com.chrislaforetsoftware.flasher.entities.Deck
 import com.chrislaforetsoftware.flasher.types.StringDate
 import java.util.*
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), DeckEditPopup.DeckEditNoticeListener {
 
 	private val manifestStoragePermissions = arrayOf(
 			Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -36,17 +41,8 @@ class MainActivity : AppCompatActivity() {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_main)
 
-		val ab = supportActionBar
-		ab!!.subtitle = getString(R.string.activity_title_card_decks)
-
-		val listView: ListView? = this.findViewById(R.id.deck_list)
-		listView?.setOnItemClickListener { parent, view, position, id ->
-			val element = parent.getItemAtPosition(position) 	// The item that was clicked
-			val deck = getDatabase().getDeckByName(element.toString())
-			val intent = Intent(this, CardsActivity::class.java)
-			intent.putExtra(DECK_EXTRA, deck)
-			startActivity(intent)
-		}
+		val actionBar = supportActionBar
+		actionBar!!.subtitle = getString(R.string.activity_title_card_decks)
 
 		requestExternalStorageManagementPermissions()
 	}
@@ -101,24 +97,30 @@ class MainActivity : AppCompatActivity() {
 	}
 
 	private fun showDecks() {
-		val deckTitleList: List<String> = this.getDatabase().getDecks()
-			.asSequence()
-			.map{ d -> d.name}
-			.toList()
-		val listItems = arrayOfNulls<String>(deckTitleList.size)
-		for (index in deckTitleList.indices) {
-			listItems[index] = deckTitleList[index]
-		}
+		val decksList: List<Deck> = this.getDatabase().getDecks()
 
 		val listView: ListView? = this.findViewById(R.id.deck_list)
 		if (listView != null) {
-			val adapter: ArrayAdapter<String?> = ArrayAdapter(
-				this.applicationContext,
-				R.layout.deck_listview,
-				listItems
+			val adapter = DeckListArrayAdapter(
+					this,
+					R.layout.deck_listview,
+					decksList
 			)
 			listView.adapter = adapter
 		}
+	}
+
+	fun onClickSelect(view: View) {
+		val deck: Deck = view.getTag(R.id.TAG_DECK) as Deck
+		val intent = Intent(this, CardsActivity::class.java)
+		intent.putExtra(DECK_EXTRA, deck)
+		startActivity(intent)
+	}
+
+	fun onClickButtonEdit(view: View) {
+		val deck: Deck = view.getTag(R.id.TAG_DECK) as Deck
+		val editPopup = DeckEditPopup(this)
+		editPopup.editDeck(view, deck)
 	}
 
 	fun onClickCreateDeckActionButton(view: View) {
@@ -161,5 +163,13 @@ class MainActivity : AppCompatActivity() {
 		}
 
 		namePromptBox.show()
+	}
+
+	override fun onDeckNameChanged(view: View, deck: Deck) {
+		showDecks()
+	}
+
+	override fun onDeckNameNotChanged(view: View, deck: Deck) {
+		// does nothing
 	}
 }

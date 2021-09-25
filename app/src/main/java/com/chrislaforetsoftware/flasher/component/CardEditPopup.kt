@@ -21,6 +21,7 @@ class CardEditPopup(private val activity: AppCompatActivity) {
     }
 
     private var listener: CardEditNoticeListener
+    private val articles = mutableListOf<String>()
 
     init {
         try {
@@ -92,9 +93,17 @@ class CardEditPopup(private val activity: AppCompatActivity) {
         card.reverse = reverse
 
         val db = DatabaseHelper(activity)
+        articles.addAll(db.getFragmentsByDeckId(card.deckId).map { it.fragment }.toList())
 
-        // TODO prevent duplicate face value
-
+        if (isNew && isDuplicateCardInDeck(card.face, card.deckId)) {
+            val messageBox = AlertDialog.Builder(activity)
+            messageBox.setTitle(activity.getString(R.string.suppressing_duplicate))
+            messageBox.setMessage("The word ${card.face} is already in the flash card list.")
+            messageBox.setCancelable(false)
+            messageBox.setNeutralButton(activity.getString(R.string.OK), null)
+            messageBox.show()
+            return false
+        }
 
         // TODO update deck last use
 
@@ -115,5 +124,27 @@ class CardEditPopup(private val activity: AppCompatActivity) {
             messageBox.show()
         }
         return false
+    }
+
+    private fun isDuplicateCardInDeck(faceText: String, deckId: Int): Boolean {
+        val newText = removeArticleFragmentFrom(faceText)
+        DatabaseHelper(activity).getCardsByDeckId(deckId).forEach {
+            if (removeArticleFragmentFrom(it.face) == newText) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun removeArticleFragmentFrom(faceText: String): String {
+        val cleanText = faceText.trim()
+        if (!cleanText.contains(" ")) {
+            return cleanText
+        }
+        val parts = cleanText.split(" ")
+        if (parts.size == 1 || !articles.contains(parts[0])) {
+            return cleanText
+        }
+        return cleanText.substring(parts[0].length).trim()
     }
 }

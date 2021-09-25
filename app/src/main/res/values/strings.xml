@@ -84,5 +84,6 @@
     <string name="error_changing_deck_name">Error changing deck name</string>
     <string name="error_saving_articles">Error saving articles</string>
     <string name="error_encountered_updating_articles">Error encountered while updating list of articles for deck.</string>
+	<string name="suppressing_duplicate">Suppressing duplicate</string>
 
 </resources>

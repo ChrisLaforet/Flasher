@@ -212,7 +212,7 @@ class CardsActivity : AppCompatActivity(), CardEditPopup.CardEditNoticeListener 
 	}
 
 	private fun removeArticleFragmentFrom(faceText: String): String {
-		var cleanText = faceText.trim()
+		val cleanText = faceText.trim()
 		if (!cleanText.contains(" ")) {
 			return cleanText
 		}

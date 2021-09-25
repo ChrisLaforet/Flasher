@@ -17,14 +17,15 @@ import com.chrislaforetsoftware.flasher.types.StringDate
 import java.util.*
 
 
-class CardsActivity() : AppCompatActivity(), CardEditPopup.CardEditNoticeListener {
+class CardsActivity : AppCompatActivity(), CardEditPopup.CardEditNoticeListener {
 
 	private lateinit var deck: Deck
 	private lateinit var activeFilterNotification: TextView
 
-	var showFace = true
-	var sortAscending = true
-	var filterOn: String = ""
+	private var showFace = true
+	private var sortAscending = true
+	private var filterOn: String = ""
+	private val articles = mutableListOf<String>()
 
 	private lateinit var clearFlagImage: Drawable
 	private lateinit var redFlagImage: Drawable
@@ -35,6 +36,8 @@ class CardsActivity() : AppCompatActivity(), CardEditPopup.CardEditNoticeListene
 
 		val extras = intent.extras
 		this.deck = extras!!.getSerializable(DECK_EXTRA) as Deck
+
+		loadArticles()
 
 		val actionBar = supportActionBar
 		actionBar!!.title = deck.name
@@ -60,6 +63,10 @@ class CardsActivity() : AppCompatActivity(), CardEditPopup.CardEditNoticeListene
 
 	private fun getDatabase(): DatabaseHelper {
 		return DatabaseHelper(this)
+	}
+
+	private fun loadArticles() {
+		getDatabase().getFragmentsByDeckId(deck.id).forEach { articles.add(it.fragment) }
 	}
 
 	override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -88,7 +95,7 @@ class CardsActivity() : AppCompatActivity(), CardEditPopup.CardEditNoticeListene
 	}
 
 	private fun promptForFilter() {
-		val filterFor: EditText = EditText(this)
+		val filterFor = EditText(this)
 		filterFor.isSingleLine = true
 		AlertDialog.Builder(this)
 			.setTitle(getString(R.string.filter_prompt_title))
@@ -174,14 +181,12 @@ class CardsActivity() : AppCompatActivity(), CardEditPopup.CardEditNoticeListene
 		var cardList: List<Card> = sortCards(this.getDatabase().getCardsByDeckId(deck.id))
 		if (filterOn.isNotEmpty()) {
 			activeFilterNotification.visibility = View.VISIBLE
-			activeFilterNotification.text = "Filtering cards on: ${filterOn}"
+			activeFilterNotification.setText("Filtering cards on: ${filterOn}")
 			cardList = cardList.filter {
-				val lowercaseFace = it.face.toLowerCase()
-				val lowercaseReverse = it.reverse.toLowerCase()
-				val lowercaseFilterOn = filterOn.toLowerCase()
-				lowercaseFace.indexOf(lowercaseFilterOn) >= 0 || lowercaseReverse.indexOf(
-					lowercaseFilterOn
-				) >= 0
+				val lowercaseFace = it.face.toLowerCase(Locale.ROOT)
+				val lowercaseReverse = it.reverse.toLowerCase(Locale.ROOT)
+				val lowercaseFilterOn = filterOn.toLowerCase(Locale.ROOT)
+				lowercaseFace.indexOf(lowercaseFilterOn) >= 0 || lowercaseReverse.indexOf(lowercaseFilterOn) >= 0
 			}
 		} else {
 			activeFilterNotification.visibility = View.GONE
@@ -201,9 +206,21 @@ class CardsActivity() : AppCompatActivity(), CardEditPopup.CardEditNoticeListene
 
 	private fun sortCards(cards: List<Card>): List<Card> {
 		if (sortAscending) {
-			return cards.sortedBy { if (showFace) it.getFaceForSort() else it.getReverseForSort() }
+			return cards.sortedBy { if (showFace) removeArticleFragmentFrom(it.getFaceForSort()) else it.getReverseForSort() }
 		}
-		return cards.sortedByDescending { if (showFace) it.getFaceForSort() else it.getReverseForSort() }
+		return cards.sortedByDescending { if (showFace) removeArticleFragmentFrom(it.getFaceForSort()) else it.getReverseForSort() }
+	}
+
+	private fun removeArticleFragmentFrom(faceText: String): String {
+		var cleanText = faceText.trim()
+		if (!cleanText.contains(" ")) {
+			return cleanText
+		}
+		val parts = cleanText.split(" ")
+		if (parts.size == 1 || !articles.contains(parts[0])) {
+			return cleanText
+		}
+		return cleanText.substring(parts[0].length).trim()
 	}
 
 	fun onClickCreateCardActionButton(view: View) {
@@ -225,7 +242,7 @@ class CardsActivity() : AppCompatActivity(), CardEditPopup.CardEditNoticeListene
 			showCards()
 		} else if (noticeValue == EDIT) {
 			// the view is the edit button that is a peer of the textbox
-			val viewGroup: ViewGroup = view.parent as ViewGroup ?: return
+			val viewGroup: ViewGroup = view.parent as ViewGroup
 			val cardFace = viewGroup.findViewById<TextView>(R.id.card_face)
 			cardFace!!.text = if (showFace) card.face else card.reverse
 		}
